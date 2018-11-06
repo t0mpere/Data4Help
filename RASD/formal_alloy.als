@@ -23,3 +23,6 @@ one sig AnonymizedRequest extends Request{
 }{
 	numberOfPeople > 1000
 }
+fact usernameIsUnique{
+	no disjoint  u1,u2: Customer | u1.username = u2.username
+}

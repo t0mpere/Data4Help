@@ -1,50 +1,71 @@
+open util/integer
 open util/boolean
 
-abstract sig Customer{
+abstract sig HealthStatus{}
+one sig HealthyConditions extends HealthStatus{}
+one sig SeriousConditions extends HealthStatus{}
+
+sig UserData{
+	heartRate: one Int,
+	bloodPressure: one Int,
+	timeStamp: one Int,
+	location: one String
+}
+
+sig Customer{
 	username: one String
 }
 
+--si potrebbe aggiungere le richieste ricevute da parte dei business customer, anche accettate o rifiutate
 one sig PrivateCustomer extends Customer{
-	automatedSOS: one Bool
+	automatedSOS: one Bool,
+	personalData: one UserData,
+	status: one HealthStatus
+}{
+	--magari qua diciamo che assumiamo che un stato di salute buono deve essere compreso
+	--tra questi parametri
+	personalData.heartRate < 100 and personalData.heartRate > 60 and personalData.bloodPressure < 120 
+	and personalData.bloodPressure > 80 implies status = HealthyConditions else status = SeriousConditions
 }
 
-one sig BusinessCustomer extends Customer{}
+one sig BusinessCustomer extends Customer{
+	request: set Request
+}
 
-abstract sig Request{
-	subscription: one Bool
+sig Request{
+	subscription: one Bool,
+	day: one Int
 }	
 
 one sig IndividualRequest extends Request{
 	privateCustomer: one PrivateCustomer,
-	businessCustomer: one BusinessCustomer
 }
+
 one sig AnonymizedRequest extends Request{
 	numberOfPeople: one Int,
-	businessCustomer: one BusinessCustomer,
-	day: one Int
 }{
 	numberOfPeople > 1000
 }
+
+one sig AutomatedSOS{
+	subscribed: set PrivateCustomer,
+	emergencyCall: PrivateCustomer one -> Bool
+}
+
 fact usernameIsUnique{
-	no disjoint  u1,u2: Customer | u1.username = u2.username
+	no disj  u1,u2: Customer | u1.username = u2.username
 } 
 
---max 5 request per user per day
-fact maxRequestConstraint{
-	no disjoint r1,r2,r3,r4,r5: AnonymizedRequest |
-		r1.businessCustomer = r2.businessCustomer and
-		r1.businessCustomer = r3.businessCustomer and
-		r1.businessCustomer = r4.businessCustomer and
-		r1.businessCustomer = r5.businessCustomer and
-		r1.day = r2.day and
-		r1.day = r3.day and
-		r1.day = r4.day and
-		r1.day = r5.day
+fact noEmergencyCallForUnsubscribed{
+	--questo per dire che per il servizio può valere solo per quelli iscritti
+	no pc1: PrivateCustomer | all b: Bool | AutomatedSOS.emergencyCall.b = pc1 and no pc2: PrivateCustomer | AutomatedSOS.subscribed = pc2 and
+	pc2.username = pc1.username
 }
+
 --Cazzate
 pred makeAnonymRequest[b:BusinessCustomer,a:AnonymizedRequest]{
-	a.businessCustomer = b
+	b.request = a
 	a.numberOfPeople = 1001
 }
 
-run makeAnonymRequest for 5 but 8 int, exactly 5 String
+run makeAnonymRequest for 5 but 8 Int, exactly 5 String

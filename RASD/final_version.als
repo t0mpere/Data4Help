@@ -27,32 +27,35 @@ sig UserData{
 
 sig Username{}
 
+one sig Notification{
+	notifications: set BusinessCustomer 
+}
+
 abstract sig Customer{
 	username: one Username
 }
 
 sig PrivateCustomer extends Customer{
 	automatedSOS: one Bool,
+	emergencyCall: one Bool,
 	status: one HealthStatus,
-	personalData: lone UserData, --realtime
+	personalData: one UserData, --realtime
 	recordData: set UserData,     --storico
 	requests:  IndividualRequest set -> Time
 }{
 	--la dimensione delle richieste può solo aumentare
 	all t1:Time | no t2:Time | t2 in t1.nexts and #requests.t2 < #requests.t1
 	max[recordData.timeStamp] < personalData.timeStamp
-	
-	personalData.heartRate < 100 and personalData.heartRate > 60 and personalData.bloodPressure < 120 
-	and personalData.bloodPressure > 80 implies status = HealthyConditions else status = SeriousConditions
 }
 
 sig BusinessCustomer extends Customer{
 	anonRequests: AnonymizedRequest set -> Time,
 }
 
-
 abstract sig Request{
-	bc: one BusinessCustomer,
+	subscription: one Bool,
+	newDataAvailable: Bool one -> Time,
+	bc: one BusinessCustomer
 }
 
 sig IndividualRequest extends Request{
@@ -63,14 +66,14 @@ sig IndividualRequest extends Request{
 }
 
 sig AnonymizedRequest extends Request{
-	numberOfPeople: some PrivateCustomer,
+	numberOfPeople: some PrivateCustomer
 }{
 	#numberOfPeople > 5
 }
 
 one sig AutomatedSOS{
 	subscribed: set PrivateCustomer,
-	emergencyCall: PrivateCustomer one -> Bool
+	emergencyCall: set PrivateCustomer -> Bool
 }
 
 fact customerRules{
@@ -110,9 +113,10 @@ fact requestRules{
 	all i:IndividualRequest, t:Time | #i.bc > 0 iff i.bc in UserBase.bcs.t
 }**/
 
-/**fact userDataUpdate{
-	all pc:PrivateCustomer, pd: UserData | pd in pc.personalData.t implies (not pd in pc.personalData.(t.next) and pd in pc.recordData.(t.next)) 
-}**/
+fact emergencySituation{
+	all pc: PrivateCustomer | pc.status = SeriousConditions iff (pc.personalData.heartRate > 130 or pc.personalData.heartRate < 50 
+or pc.personalData.bloodPressure > 130 or pc.personalData.bloodPressure < 60)
+}
 
 fact noEmergencyCallForUnsubscribed{
 	--questo per dire che per il servizio può valere solo per quelli iscritti
@@ -120,8 +124,13 @@ fact noEmergencyCallForUnsubscribed{
 }
 
 fact emergencyCall{
-	all pc: PrivateCustomer | AutomatedSOS.subscribed = pc and pc.status = SeriousConditions
-	implies AutomatedSOS.emergencyCall[pc] = True
+	all pc: PrivateCustomer | pc.emergencyCall = True iff (pc in AutomatedSOS.subscribed and pc.status = SeriousConditions)
+}
+
+fact notificationOfUpdate{
+	--il mio unico dubbio è che dobbiamo aggiungere il fatto di verificare che quella individuale sia sta accettata
+	all bc1: BusinessCustomer, r: Request, t: Time| bc1 in Notification.notifications
+			iff (bc1 = r.bc and r.subscription = True and r.newDataAvailable.t = True)
 }
 
 pred makeIndividualRequest[i: IndividualRequest, t1, t2: Time, pc, pc': PrivateCustomer]{
@@ -158,7 +167,7 @@ pred acceptIndividualRequest[i : IndividualRequest, t1, t2: Time,pc:PrivateCusto
 	pc in u.pcs.t2
 }**/
 
-run makeAnonymizedRequest for 10 but 8 Int, exactly 1 AnonymizedRequest, exactly 1 IndividualRequest
+run makeAnonymizedRequest for 8 but 8 Int, exactly 1 AnonymizedRequest, exactly 3 IndividualRequest, exactly 8 UserData
 run makeIndividualRequest for 10 but 8 Int, exactly 1 IndividualRequest, exactly 6 UserData, exactly 6 PrivateCustomer
 run acceptIndividualRequest for 10 but 8 Int, exactly 5 IndividualRequest
 --run addPrivateCustomer for 10 but 8 Int, exactly 5 IndividualRequest

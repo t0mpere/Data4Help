@@ -20,10 +20,10 @@ sig UserData{
 	location: one Location
 }
 
-one sig UserBase{
+/**one sig UserBase{
 	pcs: PrivateCustomer set -> Time,
 	bcs: BusinessCustomer set -> Time
-}
+}**/
 
 sig Username{}
 
@@ -34,14 +34,14 @@ abstract sig Customer{
 sig PrivateCustomer extends Customer{
 	automatedSOS: one Bool,
 	status: one HealthStatus,
-	personalData: one UserData, --realtime
+	personalData: lone UserData, --realtime
 	recordData: set UserData,     --storico
 	requests:  IndividualRequest set -> Time
 }{
 	--la dimensione delle richieste può solo aumentare
 	all t1:Time | no t2:Time | t2 in t1.nexts and #requests.t2 < #requests.t1
 	max[recordData.timeStamp] < personalData.timeStamp
-
+	
 	personalData.heartRate < 100 and personalData.heartRate > 60 and personalData.bloodPressure < 120 
 	and personalData.bloodPressure > 80 implies status = HealthyConditions else status = SeriousConditions
 }
@@ -105,10 +105,10 @@ fact requestRules{
 	t2 in t.nexts implies (a in bc.anonRequests.t2))
 }
 
-fact userBaseRules{
+/**fact userBaseRules{
 	all pc:PrivateCustomer, t:Time | #pc.requests.t > 0 iff pc in UserBase.pcs.t
 	all i:IndividualRequest, t:Time | #i.bc > 0 iff i.bc in UserBase.bcs.t
-}
+}**/
 
 /**fact userDataUpdate{
 	all pc:PrivateCustomer, pd: UserData | pd in pc.personalData.t implies (not pd in pc.personalData.(t.next) and pd in pc.recordData.(t.next)) 
@@ -150,15 +150,15 @@ pred acceptIndividualRequest[i : IndividualRequest, t1, t2: Time,pc:PrivateCusto
 	t2 = t1.next
 }
 
-pred addPrivateCustomer[u:UserBase, t1,t2:Time,pc:PrivateCustomer]{
+/**pred addPrivateCustomer[u:UserBase, t1,t2:Time,pc:PrivateCustomer]{
 	//pre
 	not pc in u.pcs.t1
 	//post
 	t1.next = t2
 	pc in u.pcs.t2
-}
+}**/
 
 run makeAnonymizedRequest for 10 but 8 Int, exactly 1 AnonymizedRequest, exactly 1 IndividualRequest
 run makeIndividualRequest for 10 but 8 Int, exactly 1 IndividualRequest, exactly 6 UserData, exactly 6 PrivateCustomer
-run acceptIndividualRequest for 10 but 8 Int, exactly 5 String, exactly 5 IndividualRequest
-run addPrivateCustomer for 10 but 8 Int, exactly 5 String, exactly 5 IndividualRequest
+run acceptIndividualRequest for 10 but 8 Int, exactly 5 IndividualRequest
+--run addPrivateCustomer for 10 but 8 Int, exactly 5 IndividualRequest

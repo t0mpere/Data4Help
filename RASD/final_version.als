@@ -164,6 +164,6 @@ pred acceptIndividualRequest[i : IndividualRequest, t1, t2: Time,pc:PrivateCusto
 	t2 = t1.next
 }
 
-run makeAnonymizedRequest for 8 but 8 Int, exactly 1 AnonymizedRequest, exactly 3 IndividualRequest, exactly 8 UserData
+run makeAnonymizedRequest for 7 but 8 Int, exactly 1 AnonymizedRequest, exactly 1 IndividualRequest
 run makeIndividualRequest for 10 but 8 Int, exactly 1 IndividualRequest, exactly 6 UserData, exactly 6 PrivateCustomer
-run acceptIndividualRequest for 10 but 8 Int, exactly 5 IndividualRequest
+run acceptIndividualRequest for 5 but 5 Int, exactly 3 IndividualRequest, exactly 2 PrivateCustomer

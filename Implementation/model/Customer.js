@@ -1,19 +1,24 @@
 const db = require('../database/DbConnection');
 class Customer {
-    constructor(email,password){
-        this.email = email;
-        this.password = password;
-    }
-    getEmail(){
 
-        db.con.query("select * from PrivateCustomer ");
-        return this.email;
+
+    constructor(email,password){
+        this._password = password;
+        this._email = email;
+    }
+    get email() {
+        return this._email;
+    }
+    get password() {
+        return this._password;
     }
     static getCustomerFromDb(email,callback){
-        let tmp;
-        db.con.query("SELECT * FROM PrivateCustomers where email = "+email+";",function (err,res,fields) {
+
+        db.con.query("SELECT * FROM PrivateCustomers where email = "+email+";",function (err,res) {
             if (err) throw err;
-            tmp = new Customer(res[0].email,res[0].password);
+
+            let tmp = new Customer(res[0]._email,res[0].password);
+            //Function that handles the result of the query
             callback(tmp);
             console.log(tmp);
         });

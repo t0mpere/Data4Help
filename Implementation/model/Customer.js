@@ -14,7 +14,7 @@ class Customer {
     }
     static getCustomerFromDb(email,callback){
 
-        db.con.query("SELECT * FROM PrivateCustomers where email = "+email+";",function (err,res) {
+        db.con.query("SELECT * FROM PrivateCustomers,BusinessCustomers where email = "+email+";",function (err,res) {
             if (err) throw err;
 
             let tmp = new Customer(res[0]._email,res[0].password);

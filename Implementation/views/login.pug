@@ -15,9 +15,9 @@ block content
                     .panel-body
                         .row
                             .col-lg-12
-                                form#login-form(action='https://phpoll.com/login/process', method='post', role='form', style='display: block;')
+                                form#login-form(action='/login', method='post', role='form', style='display: block;')
                                     .form-group
-                                        input#username.form-control(type='text', name='username', tabindex='1', placeholder='Username', value='')
+                                        input#username.form-control(type='text', name='email', tabindex='1', placeholder='Email', value='')
                                     .form-group
                                         input#password.form-control(type='password', name='password', tabindex='2', placeholder='Password')
                                     .form-group.text-center

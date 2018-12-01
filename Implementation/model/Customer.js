@@ -1,6 +1,16 @@
 const db = require('../database/DbConnection');
 class Customer {
 
+    static isEmailPresent(email,callback){
+        let sql = "SELECT * FROM Customers WHERE email = '" + email +"'";
+        db.con.query(sql,function (err,res,fields) {
+            if (err) throw err;
+            if(res[0] !== undefined)
+                callback(true);
+            else
+                callback(false);
+        })
+    }
 
     constructor(email,password){
         this._password = password;
@@ -14,14 +24,6 @@ class Customer {
     }
     static getCustomerFromDb(email,callback){
 
-        db.con.query("SELECT * FROM PrivateCustomers,BusinessCustomers where email = "+email+";",function (err,res) {
-            if (err) throw err;
-
-            let tmp = new Customer(res[0]._email,res[0].password);
-            //Function that handles the result of the query
-            callback(tmp);
-            console.log(tmp);
-        });
     }
 
 

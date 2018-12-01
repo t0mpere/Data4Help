@@ -21,6 +21,7 @@ class PrivateCustomer extends Customer{
         });
     }
 
+
     static getPrivateCustomerFromDb(email,callback){
         let sql = "SELECT * FROM PrivateCustomers WHERE email = '"+email+"'";
         db.con.query(sql,function (err,res,fields) {
@@ -91,10 +92,6 @@ class PrivateCustomer extends Customer{
         db.con.query(sql,values);
     }
 
-
-
-
-
     get email() {
         return this._email;
     }
@@ -127,4 +124,4 @@ class PrivateCustomer extends Customer{
     }
 }
 module.exports = PrivateCustomer;
-//new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine");
+//console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine"));

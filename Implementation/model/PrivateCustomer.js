@@ -23,8 +23,8 @@ class PrivateCustomer extends Customer{
 
 
     static getPrivateCustomerFromDb(email,callback){
-        let sql = "SELECT * FROM PrivateCustomers WHERE email = '"+email+"'";
-        db.con.query(sql,function (err,res,fields) {
+        let sql = "SELECT * FROM PrivateCustomers WHERE email = ?";
+        db.con.query(sql,email,function (err,res) {
             //converting date
             let date = new Date(res[0].dateOfBirth);
             //mapping from tuple to object
@@ -72,19 +72,16 @@ class PrivateCustomer extends Customer{
 
     }
 
-    addPrivateCustomerToDb(){
-        let sql = "INSERT INTO PrivateCustomers VALUES (?)";
+    commitToDb(){
+        let sql = "INSERT INTO PrivateCustomers(email,password,name,surname,sex,placeOfBirth,dateOfBirth,codiceFiscale) VALUES (?)";
         let values = [
             [
                 this._email,
                 this._password,
-                "default()",
-                "default()",
                 this._name,
                 this._surname,
                 this._sex,
                 this._placeOfBirth,
-                "",
                 this._dateOfBirth,
                 this._cf
             ]
@@ -124,4 +121,4 @@ class PrivateCustomer extends Customer{
     }
 }
 module.exports = PrivateCustomer;
-//console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine"));
+console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine").commitToDb());

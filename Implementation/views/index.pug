@@ -4,5 +4,6 @@ block content
     .jumbotron.text-center
         h1 Data4Help
         p #{title}
-        a(href="/login")
-            .btn(type='button') Login
+        if auth
+            #welcome Welcome:
+            h4 #{user}

@@ -13,28 +13,33 @@ html
   // Sidebar
   #sidebar-wrapper
       ul.sidebar-nav
-          li.sidebar-brand
-              a(href='#') Start Bootstrap
-          li
-              a(href='#') Dashboard
-          li
-              a(href='#') Shortcuts
-          li
-              a(href='#') Overview
-          li
-              a(href='#') Events
-          li
-              a(href='#') About
-          li
-              a(href='#') Services
-          li
-              a(href='#') Contact
+          p
+          if auth
+              li.sidebar-brand
+                  h2 Menu:
+              li
+                  a(href='/') Home Page
+              li
+                  a(href='#') Dashboard
+              li
+                  a(href='#') Anonymous queries
+              li
+                  a(href='/logout') Logout
+          else
+              li.sidebar-brand
+                  h2 Menu:
+              li
+                  a(href='/') Home Page
+              li
+                  a(href='/login') Login / Register
+
   // /#sidebar-wrapper
   // Page Content
   #page-content-wrapper
       .container-fluid
           header
-              a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
+            .col-sm-1
+                a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
           block content
   // /#page-content-wrapper
   // /#wrapper

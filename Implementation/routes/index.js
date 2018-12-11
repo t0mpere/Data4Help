@@ -5,7 +5,13 @@ let passport = require('passport');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  res.render('index', { title: req.isAuthenticated() ,content: 'placeholder' });
+  console.log(req.user);
+  if(req.isAuthenticated()){
+      res.render('index', { title: 'Data4Help' ,auth: req.isAuthenticated(), user: req.user._email });
+  }else{
+    res.render('index',{title: 'Data4Help' ,auth: req.isAuthenticated()})
+  }
+
 });
 
 module.exports = router;

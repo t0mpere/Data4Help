@@ -12,6 +12,8 @@ const BusinessCustomer = require('./model/BusinessCustomer');
 
 var indexRouter = require('./routes/index');
 let loginRouter = require('./routes/login');
+let logoutRouter = require('./routes/logout');
+let registrationRouter = require('./routes/registration');
 
 var app = express();
 
@@ -64,6 +66,8 @@ passport.deserializeUser((user, done) => {
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/logout',logoutRouter);
+app.use('/registration',registrationRouter);
 
 
 // catch 404 and forward to error handler

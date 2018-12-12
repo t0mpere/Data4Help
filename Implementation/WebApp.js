@@ -15,22 +15,22 @@ let loginRouter = require('./routes/login');
 let logoutRouter = require('./routes/logout');
 let registrationRouter = require('./routes/registration');
 
-var app = express();
+var webApp = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+webApp.set('views', path.join(__dirname, 'views'));
+webApp.set('view engine', 'pug');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+webApp.use(logger('dev'));
+webApp.use(express.json());
+webApp.use(express.urlencoded({ extended: false }));
+webApp.use(cookieParser());
+webApp.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/bootstrap',express.static(__dirname + '/node_modules/bootstrap/'));
+webApp.use('/bootstrap',express.static(__dirname + '/node_modules/bootstrap/'));
 
 //login business
-app.use(session({
+webApp.use(session({
     genid: (req) => {
         console.log('Inside the session middleware');
         console.log(req.sessionID);
@@ -40,8 +40,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+webApp.use(passport.initialize());
+webApp.use(passport.session());
 // configure passport.js to use the local strategy
 passport.use(new LocalStrategy(
     { usernameField: 'email' },
@@ -64,14 +64,14 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/logout',logoutRouter);
-app.use('/registration',registrationRouter);
+webApp.use('/', indexRouter);
+webApp.use('/login', loginRouter);
+webApp.use('/logout',logoutRouter);
+webApp.use('/registration',registrationRouter);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+webApp.use(function(req, res, next) {
   next(createError(404));
 });
 
@@ -79,7 +79,7 @@ app.use(function(req, res, next) {
 
 
 // error handler default case
-app.use(function(err, req, res, next) {
+webApp.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -89,4 +89,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = webApp;

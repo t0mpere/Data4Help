@@ -1,4 +1,3 @@
-
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -10,6 +9,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const BusinessCustomer = require('./model/BusinessCustomer');
 
+/*
+* Routes declarations
+ */
 var indexRouter = require('./routes/index');
 let loginRouter = require('./routes/login');
 let logoutRouter = require('./routes/logout');
@@ -25,11 +27,17 @@ webApp.use(logger('dev'));
 webApp.use(express.json());
 webApp.use(express.urlencoded({ extended: false }));
 webApp.use(cookieParser());
-webApp.use(express.static(path.join(__dirname, 'public')));
 
+/*
+*Static files setup
+ */
+webApp.use(express.static(path.join(__dirname, 'public')));
 webApp.use('/bootstrap',express.static(__dirname + '/node_modules/bootstrap/'));
 
-//login business
+/*
+*Login using passport.js
+* Setup session
+ */
 webApp.use(session({
     genid: (req) => {
         console.log('Inside the session middleware');
@@ -42,16 +50,24 @@ webApp.use(session({
 }));
 webApp.use(passport.initialize());
 webApp.use(passport.session());
-// configure passport.js to use the local strategy
+
+
+/*
+*Login strategy
+ */
 passport.use(new LocalStrategy(
     { usernameField: 'email' },
     (email, password, done) => {
+        //retrieve BC from db for user check
         BusinessCustomer.getBusinessCustomerFromDb(email,(bc)=> {
-            if(bc.password === password) done(null,bc);
+            if(bc._password === password && bc._active) done(null,bc);
+            else done(null,false);
         });
     }
 ));
-
+/*
+* User serialization / deserialization middleware
+ */
 passport.serializeUser((user, done) => {
     console.log(user);
     done(null, user);
@@ -64,6 +80,9 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
+/*
+* routing requests
+ */
 webApp.use('/', indexRouter);
 webApp.use('/login', loginRouter);
 webApp.use('/logout',logoutRouter);
@@ -74,9 +93,6 @@ webApp.use('/registration',registrationRouter);
 webApp.use(function(req, res, next) {
   next(createError(404));
 });
-
-
-
 
 // error handler default case
 webApp.use(function(err, req, res, next) {

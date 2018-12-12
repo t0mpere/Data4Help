@@ -87,6 +87,7 @@ class PrivateCustomer extends Customer{
             ]
         ];
         db.con.query(sql,values);
+        return this;
     }
 
     get email() {
@@ -121,4 +122,4 @@ class PrivateCustomer extends Customer{
     }
 }
 module.exports = PrivateCustomer;
-console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine").commitToDb());
+//console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine").commitToDb());

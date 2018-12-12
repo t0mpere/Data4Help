@@ -31,7 +31,7 @@ class BusinessCustomer extends Customer{
     }
 
 
-    constructor(email,password,name,partitaIva,address,comune,nazione) {
+    constructor(email,password,name,partitaIva,address,comune,nazione,active) {
         super(email, password);
         this._name = name;
         this._partitaIva = partitaIva;
@@ -40,6 +40,7 @@ class BusinessCustomer extends Customer{
         this._nazione = nazione;
         this._email = email;
         this._password = password;
+        this._active = active;
     }
     //TODO test
     addBusinessCustomerToDb(){
@@ -53,7 +54,8 @@ class BusinessCustomer extends Customer{
                 this._partitaIva,
                 this._address,
                 this._comune,
-                this._nazione
+                this._nazione,
+                this._active
             ]
         ];
         db.con.query(sql,values);
@@ -74,7 +76,8 @@ class BusinessCustomer extends Customer{
                 res[0].partitaIva,
                 res[0].address,
                 res[0].comune,
-                res[0].nazione
+                res[0].nazione,
+                res[0].active
             );
             callback(bc);
         })

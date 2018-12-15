@@ -19,7 +19,7 @@ class UserData {
             if(res.length) {
                 let userData = [];
                 let tuple;
-                for(let i = 0; i < res.length ; i++)
+                for(let i = 0; i < res.length ; i++){
                     tuple = res[i];
                     userData.push(new UserData(
                         tuple.PrivateCustomers_email,
@@ -31,11 +31,25 @@ class UserData {
                         new Date(tuple.timestamp),
                         new Date(tuple.timeOfAcquisition)
                     ));
+                }
+
                 callback(userData);
             }else callback(false);
         })
     }
+    commitToDb(){
+        let values = [
+            Object.values(this)
+        ];
+        db.con.query("insert into UserData values (?)",values,(err,res)=>{
+            if (err) throw err;
+
+        });
+    }
 
 
 }
-//UserData.getUserDataFromEmail("tompere96@gmail.com",(res)=> console.log(res));
+UserData.getUserDataFromEmail('cami.231298@gmail.com',(res)=> {
+    res[0]._timestamp = new Date();
+    res[0].commitToDb();
+});

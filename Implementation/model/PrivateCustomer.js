@@ -42,32 +42,40 @@ class PrivateCustomer extends Customer{
             callback(err,pc);
         })
     }
-        
-    constructor(email,password,name,surname,sex,cf,dateOfBirth,placeOfBirth,placeOfBirthProvincia){
-        super(email,password);
-        this._name = name;
-        this._surname = surname;
-        if(sex === 'M' || sex === 'F'){
-            this._sex = sex;
-        }else {
-            throw 'Wrong value for sex, use provided enum: '+ sex;
+    /*
+    Object Containing
+        args: {
+            email
+            password
+            name
+            surname
+            sex
+            placeOfBirth
+            dateOfBirth
+            cf
         }
-        this._email = email;
-        this._password = password;
-        this._sex = sex;
-        if(!dateOfBirth instanceof Date) throw 'PrivateCustomer: incorrect type on date';
-        this._dateOfBirth = dateOfBirth;
-        this._placeOfBirth = placeOfBirth;
+    */
+    constructor(args){
+        super(args.email,args.password);
+        this._args = args;
+        this._name = args.name;
+        this._surname = args.surname;
+        if(args.sex === 'M' || args.sex === 'F'){
+            this._sex = args.sex;
+        }else {
+            console.log(args.sex);
+            throw 'Wrong value for sex, use provided enum: ' + sex;
+        }
+        this._email = args.email;
+        this._password = args.password;
+        this._sex = args.sex;
+        if(!(args.dateOfBirth instanceof Date)) throw 'PrivateCustomer: incorrect type on date';
+        this._dateOfBirth = args.dateOfBirth;
+        this._placeOfBirth = args.placeOfBirth;
 
-        if(PrivateCustomer.getCf({
-            _name:name,
-            _surname:surname,
-            _sex:sex,
-            _dateOfBirth:dateOfBirth,
-            _placeOfBirth:placeOfBirth
-        }) === cf)
+        if(PrivateCustomer.getCf(this) === args.cf)
 
-            this._cf = cf;
+            this._cf = args.cf;
         else throw 'invalid cf';
 
     }
@@ -122,4 +130,3 @@ class PrivateCustomer extends Customer{
     }
 }
 module.exports = PrivateCustomer;
-//console.log(new PrivateCustomer("cami.231298@gmail.com","passuord","Camilla","Nardini",Sex.FEMALE,"NRDCLL98T63L483W",new Date(1998,11,23),"Udine").commitToDb());

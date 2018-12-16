@@ -3,7 +3,7 @@ let router = express.Router();
 let passport = require('passport');
 
 router.get('/', (req, res) => {
-    res.render('login',{auth: req.isAuthenticated});
+    res.render('login',{auth: req.isAuthenticated(), newReg: false});
 });
 
 router.post('/', passport.authenticate('local', { failureRedirect: '/login' }),

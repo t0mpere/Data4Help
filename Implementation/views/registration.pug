@@ -2,35 +2,45 @@ extends layout
 
 block content
     body.text-center
-        .row
-            .col-md-4
-            .col-md-4
-                form(action='/registration', method='post')
-                    label(for='email') Email address
-                    input#email.form-control(type='email', name='email', aria-describedby='emailHelp', placeholder='Enter email')
-                    small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
-                    label(for='password') Password
-                    input#password.form-control(type='password', name='password', placeholder='Password')
-                    label(for='partitaIva') Partita Iva
-                    input#partitaIva.form-control(type='text', name='piva', placeholder='p. iva', oninput='check(this)')
-                    script.
-                        function check(input) {
-                            if (input.value.length != 11) {
-                                input.setCustomValidity('too short');
-                            } else {
-                                // input is fine -- reset the error message
-                                input.setCustomValidity('');
-                            }
-                        }
-                    label(for='name') Name
-                    input#name.form-control(type='text', name='name', placeholder='Name')
-                    label(for='address') Address
-                    input#address.form-control(type='text', name='address', placeholder='Address')
-                    label(for='comune') District
-                    input#comune.form-control(type='text', name='comune', placeholder='District')
-                    label(for='nazione') Nation
-                    input#nazione.form-control(type='text', name='nazione', placeholder='Nation')
-                    button.btn.btn-primary(type='submit') Submit
+        unless auth
+            .row
+                .col-md-4
+                .col-md-4
+                    form(action='/registration', method='post')
+                        label(for='email') Email address
+                        input#email.form-control(type='email', name='email', aria-describedby='emailHelp', placeholder='Enter email')
+                        small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                        label(for='password') Password
+                        input#password.form-control(type='password', name='password', placeholder='Password')
+                        label(for='partitaIva') Partita Iva
+                        input#partitaIva.form-control(type='text', name='partitaIva', placeholder='p. iva', oninput='check(this)')
+                        script.
 
-            .col-md-4
+                            function check(input) {
+                                let tmp ;
+                                if (!input)
+                                    tmp = document.getElementById('partitaIva');
+                                else
+                                    tmp = input;
+
+                                if (tmp.value.length != 11) {
+                                    tmp.setCustomValidity('too short');
+                                } else {
+                                    // input is fine -- reset the error message
+                                    tmp.setCustomValidity('');
+                                }
+                            }
+                        label(for='name') Name
+                        input#name.form-control(type='text', name='name', placeholder='Name')
+                        label(for='address') Address
+                        input#address.form-control(type='text', name='address', placeholder='Address')
+                        label(for='comune') District
+                        input#comune.form-control(type='text', name='comune', placeholder='District')
+                        label(for='nazione') Nation
+                        input#nazione.form-control(type='text', name='nazione', placeholder='Nation')
+                        button.btn.btn-primary(type='submit',onclick = 'check()') Submit
+
+                .col-md-4
+        else
+            h1 Logout to Register a new user
 

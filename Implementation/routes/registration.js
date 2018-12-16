@@ -1,13 +1,23 @@
 let express = require('express');
 let router = express.Router();
 let passport = require('passport');
+const UserServices = require('../Controller/UserServices');
 
 router.get('/', (req, res) => {
-    res.render('registration',{auth: req.isAuthenticated});
+    res.render('registration',{auth: req.isAuthenticated()});
 });
 router.post('/', (req,res) =>{
-    console.log(req.body);
-    res.redirect("/");
+    if(!req.isAuthenticated()){
+        UserServices.registerBusinessCustomer(req.body,(result) =>{
+            if(result !== false){
+                res.render('login',{auth: req.isAuthenticated(),newReg: true})
+            }
+        })
+    }else
+    {
+        res.redirect("/");
+    }
+
 });
 
 module.exports = router;

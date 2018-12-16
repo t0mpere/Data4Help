@@ -1,4 +1,6 @@
 const PrivateCustomer = require('../model/PrivateCustomer');
+const UserData = require('../model/UserData');
+const BusinessCustomer = require("../model/BusinessCustomer");
 /*
 *   PrivateCustomer Module:
 *
@@ -19,7 +21,7 @@ args: {
     cf
 }
 like
-createPrivateCustomer({
+registerPrivateCustomer({
     email:'tompere96@gmail.com',
     password: 'psw',
     name:'Tommaso',
@@ -29,16 +31,33 @@ createPrivateCustomer({
     dateOfBirth: new Date(1996,5,11),
     cf:'PRSTMS96H11L483L'
 });
+callback returns weather if the committing was successful or not
 */
+function registerPrivateCustomer(args,callback) {
+    new PrivateCustomer(args).commitToDb(callback);
 
-function createPrivateCustomer(args) {
-    new PrivateCustomer(args).commitToDb();
 }
-function isPrivateCustomerRegistered(email,callback) {
-    PrivateCustomer.isEmailPresent(email,callback);
+/*
+ * checks if exist any private/business customer with given email
+ *
+ * callback(res) res is bool
+ */
+function isCustomerRegistered(email,callback) {
+    return PrivateCustomer.isEmailPresent(email,callback);
 }
-function getPersonalData() {
-
+/*
+*   callback(res) res is an array of UserData
+ */
+function getPersonalData(email,callback) {
+    return UserData.getUserDataFromEmail(email,callback);
+}
+/*
+*   callback(err)
+ */
+function addUserDataToDb(data,callback){
+    for(let i = 0; i < data.length; i++){
+        data[i].commitToDb(callback);
+    }
 }
 
 
@@ -48,6 +67,11 @@ function getPersonalData() {
  *   for the Business Customer
  *
  */
+function registerBusinessCustomer(args,callback){
+    args._active = 0;
+    new BusinessCustomer(args).commitToDb(callback);
+
+}
 
 
  /*
@@ -55,3 +79,11 @@ function getPersonalData() {
  *   Will interface only with the web app ( system manager side) providing methods to see the business customers
  *   who want to register and to accept / reject them
  */
+
+ module.exports = {
+     registerPrivateCustomer:registerPrivateCustomer,
+     addUserDataToDb:addUserDataToDb,
+     isCustomerRegistered:isCustomerRegistered,
+     registerBusinessCustomer:registerBusinessCustomer
+
+ }

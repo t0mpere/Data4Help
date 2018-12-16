@@ -31,69 +31,85 @@ class BusinessCustomer extends Customer{
     }
 
 
-    constructor(email,password,name,partitaIva,address,comune,nazione,active) {
-        super(email, password);
-        this._name = name;
-        this._partitaIva = partitaIva;
-        this._address = address;
-        this._comune = comune;
-        this._nazione = nazione;
-        this._email = email;
-        this._password = password;
-        this._active = active;
+    constructor(args) {
+        super(args.email, args.password);
+        this._name = args.name;
+        this._partitaIva = args.partitaIva;
+        this._address = args.address;
+        this._comune = args.comune;
+        this._nazione = args.nazione;
+        this._email = args.email;
+        this._password = args.password;
+        this._active = args.active;
     }
     //TODO test
-    addBusinessCustomerToDb(){
-        let sql = "INSERT INTO BusinessCustomers VALUES (?)";
-        let values = [
-            [
-                this._email,
-                this._password,
-                "default()",
-                this._name,
-                this._partitaIva,
-                this._address,
-                this._comune,
-                this._nazione,
-                this._active
-            ]
-        ];
-        db.con.query(sql,values);
+    commitToDb(callback){
+        Customer.isEmailPresent(this.email,(res) =>{
+            if(res === false) {
+                let sql = "INSERT INTO BusinessCustomers(email, password, name, partitaIva, address, comune, nazione, active) VALUES (?)";
+                let values = [
+                    [
+                        this._email,
+                        this._password,
+                        this._name,
+                        this._partitaIva,
+                        this._address,
+                        this._comune,
+                        this._nazione,
+                        this._active
+                    ]
+                ];
+                db.con.query(sql, values);
+                callback(this);
+            }
+            else {
+                callback(false);
+            }
+        });
+
     }
-    static isBusinessCustomerInDb(email,callback){
+
+
+    isBusinessCustomerInDb(callback){
+        BusinessCustomer.getBusinessCustomerFromDb(this.email,callback);
+    }
+
+    //TODO test
+    static getBusinessCustomerFromDb(email,callback){
         let sql = "SELECT * FROM BusinessCustomers WHERE email = ?";
         db.con.query(sql,email,function (err,res) {
-            if (err) throw err;
+            if (err) {
+                callback(false);
+                throw err;
+            }
+
             if(res.length === 0) {
                 callback(false);
                 return;
             }
             //mapping from tuple to object
             let bc = new BusinessCustomer(
-                res[0].email,
-                res[0].password,
-                res[0].name,
-                res[0].partitaIva,
-                res[0].address,
-                res[0].comune,
-                res[0].nazione,
-                res[0].active
+                res[0]
             );
             callback(bc);
         })
     }
+    setActiveStatus(value,callback){
+        let sql = "UPDATE BusinessCustomers  SET active = ?  WHERE email = ? ;";
+        db.con.query(sql,[value,this.email],function (err) {
+            if (err) {
+                callback(false);
+                throw err;
+            }
 
-    isBusinessCustomerInDb(callback){
-        BusinessCustomer.isBusinessCustomerInDb(this.email,callback);
-    }
-
-    //TODO test
-    static getBusinessCustomerFromDb(email,callback){
-        BusinessCustomer.isBusinessCustomerInDb(email,(res)=>{
-            if(res === undefined) throw "Business Customer non in db";
-            else callback(res);
+            callback(true);
         })
     }
 
 }
 module.exports = BusinessCustomer;
+let bc = BusinessCustomer.getBusinessCustomerFromDb('acme@corp.com',(res) =>{
+    res.setActiveStatus(1,(res) => {
+        console.log(res);
+    })
+})

@@ -12,6 +12,10 @@ class UserData {
         //time of acquisition of data on smartphone
         this._timeOfAcquisition = timeOfAcquisition;
     }
+
+
+
+
     static getUserDataFromEmail(email,callback){
         let sql = "SELECT * FROM UserData where PrivateCustomers_email = ?";
         db.con.query(sql,email,(err,res) =>{
@@ -37,18 +41,22 @@ class UserData {
             }else callback(false);
         })
     }
-    commitToDb(){
+
+
+
+    commitToDb(callback){
         let values = [
             Object.values(this)
         ];
-        db.con.query("insert into UserData values (?)",values,(err,res)=>{
-            if (err) throw err;
+        db.con.query("insert into UserData values (?)",values,(err)=>{
+            if (err) callback(err);
 
         });
     }
 
 
 }
+module.exports = UserData;
 UserData.getUserDataFromEmail('cami.231298@gmail.com',(res)=> {
     res[0]._timestamp = new Date();
     res[0].commitToDb();

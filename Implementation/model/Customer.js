@@ -3,7 +3,7 @@ class Customer {
 
     static isEmailPresent(email,callback){
         let sql = "SELECT * FROM Customers WHERE email = '" + email +"'";
-        db.con.query(sql,function (err,res,fields) {
+        db.con.query(sql,function (err,res) {
             if (err) throw err;
             if(res[0] !== undefined)
                 callback(true);

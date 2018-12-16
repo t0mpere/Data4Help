@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    body.text-center
+        if auth
+            .row
+                .col-md-4
+                .col-md-4
+                    form(action='/bc/anonRequest/newRequest', method='post')
+                        label(for='title') Title
+                        input#title.form-control(type='text', name='title', placeholder='Enter a title')
+                        label(for='update') Update
+                        select#update.form-control
+                            option(value='1d') 1 per day
+                            option(value='2d') 2 per day
+                            option(value='1w') 1 per week
+                            option(value='1m') 1 per month
+                        label(for='param') Parameters request
+                        input#param.form-control(type='text', name='param', placeholder='Enter parameter')
+                        hr
+                        button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
+                .col-md-4
+        else
+            h1 Login to use this function
+
+

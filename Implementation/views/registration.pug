@@ -23,7 +23,7 @@ block content
                                 else
                                     tmp = input;
 
-                                if (tmp.value.length != 11) {
+                                if (tmp.value.length !== 11) {
                                     tmp.setCustomValidity('too short');
                                 } else {
                                     // input is fine -- reset the error message
@@ -38,7 +38,8 @@ block content
                         input#comune.form-control(type='text', name='comune', placeholder='District')
                         label(for='nazione') Nation
                         input#nazione.form-control(type='text', name='nazione', placeholder='Nation')
-                        button.btn.btn-primary(type='submit',onclick = 'check()') Submit
+                        hr
+                        button.btn.btn-primary(type='submit', onclick = 'check()') Submit
 
                 .col-md-4
         else

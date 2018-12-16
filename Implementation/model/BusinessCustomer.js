@@ -112,4 +112,4 @@ let bc = BusinessCustomer.getBusinessCustomerFromDb('acme@corp.com',(res) =>{
     res.setActiveStatus(1,(res) => {
         console.log(res);
     })
-})
+});

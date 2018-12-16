@@ -17,6 +17,7 @@ let loginRouter = require('./routes/login');
 let logoutRouter = require('./routes/logout');
 let registrationRouter = require('./routes/registration');
 let requestAccessRouter = require('./routes/accessRequest');
+let anonRequestRouter = require('./routes/anonRequest');
 
 var webApp = express();
 
@@ -93,6 +94,7 @@ webApp.use('/bc/login', loginRouter);
 webApp.use('/bc/logout',logoutRouter);
 webApp.use('/bc/register',registrationRouter);
 webApp.use('/bc/accessRequest',requestAccessRouter);
+webApp.use('/bc/anonRequest',anonRequestRouter);
 
 
 // catch 404 and forward to error handler

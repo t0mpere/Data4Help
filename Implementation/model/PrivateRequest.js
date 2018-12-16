@@ -1,36 +1,36 @@
 const db = require('../database/DbConnection');
 class PrivateRequest{
 
-    get timestamp() {
-        return this._timestamp;
+    get _timestamp() {
+        return this.timestamp;
     }
 
-    get accepted() {
-        return this._accepted;
+    get _accepted() {
+        return this.accepted;
     }
 
-    get businessCustomerEmail() {
-        return this._businessCustomerEmail;
+    get _businessCustomerEmail() {
+        return this.BusinessCustomers_email;
     }
 
-    get privateCustomerEmail() {
-        return this._privateCustomerEmail;
+    get _privateCustomerEmail() {
+        return this.PrivateCustomers_email;
     }
 
     constructor(args){
-        this._timestamp =args.timestamp;
-        this._accepted = args.accepted;
-        this._businessCustomerEmail = args.BusinessCustomers_email;
-        this._privateCustomerEmail = args.PrivateCustomers_email;
+        this.timestamp = args.timestamp;
+        this.accepted = args.accepted;
+        this.BusinessCustomers_email = args.BusinessCustomers_email;
+        this.PrivateCustomers_email = args.PrivateCustomers_email;
     }
 
     commitToDb(callback){
         let sql = "INSERT INTO PrivateRequest(accepted,BusinessCustomers_email,PrivateCustomers_email) VALUES (?)";
         let values = [
             [
-                this._accepted,
-                this._businessCustomerEmail,
-                this._privateCustomerEmail
+                this.accepted,
+                this.BusinessCustomers_email,
+                this.PrivateCustomers_email
             ]
         ];
         db.con.query(sql,values,(err) => {
@@ -57,9 +57,11 @@ class PrivateRequest{
             if(err) throw err;
             if(res.length) {
                 let tuples = res;
+                let results = [];
                 for (let i = 0; i < tuples.length; i++ ) {
-                    callback(new PrivateRequest(tuples[i]));
+                    results.push(new PrivateRequest(tuples[i]));
                 }
+                callback(results);
             }else callback(false);
         })
     }
@@ -70,9 +72,11 @@ class PrivateRequest{
             if(err) throw err;
             if(res.length) {
                 let tuples = res;
+                let results = [];
                 for (let i = 0; i < tuples.length; i++ ) {
-                    callback(new PrivateRequest(tuples[i]));
+                    results.push(new PrivateRequest(tuples[i]));
                 }
+                callback(results);
             }else callback(false);
         })
     }

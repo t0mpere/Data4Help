@@ -10,7 +10,7 @@ block content
                         if newReg
                             h3 Success, you are registered.
                     p
-                    form.form-signin(action='/login', method='post')
+                    form.form-signin(action='/bc/login', method='post')
                         h1.h3.mb-3.font-weight-normal Please sign in
                         p
                         label.sr-only(for='email') Email address
@@ -23,7 +23,7 @@ block content
 
                         t.text-center Not registered?
                         p
-                        a.btn.btn-primary.btn-bd-primary(href = '/registration') Register
+                        a.btn.btn-primary.btn-bd-primary(href = '/bc/register') Register
                 .col-md-4
     else
         p

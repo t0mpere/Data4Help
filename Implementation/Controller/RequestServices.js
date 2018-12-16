@@ -35,6 +35,9 @@ function makePrivateRequest(BCEmail,PCEmail,callback) {
         }
     })
 }
+function getPrivateRequests(BCEmail,callback) {
+    PrivateRequest.getPrivateRequestsByBC(BCEmail,callback);
+}
 
 function getPrivateData(BCEmail,PCEmail,callback) {
     PrivateRequest.getPrivateRequest(PCEmail,BCEmail,(res)=>{
@@ -49,6 +52,10 @@ function getPrivateData(BCEmail,PCEmail,callback) {
 
     })
 }
+module.exports = {
+    getPrivateRequests:getPrivateRequests,
+    getPrivateData:getPrivateData
+};
 getPrivateData('giackosparrow@hotmail.it','cami.231298@gmail.com',(res) =>{
    console.log(res);
 });

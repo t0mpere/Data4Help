@@ -12,10 +12,11 @@ const BusinessCustomer = require('./model/BusinessCustomer');
 /*
 * Routes declarations
  */
-var indexRouter = require('./routes/index');
+let indexRouter = require('./routes/index');
 let loginRouter = require('./routes/login');
 let logoutRouter = require('./routes/logout');
 let registrationRouter = require('./routes/registration');
+let requestAccessRouter = require('./routes/accessRequest');
 
 var webApp = express();
 
@@ -83,10 +84,15 @@ passport.deserializeUser((user, done) => {
 /*
 * routing requests
  */
+webApp.use(function(req, res, next) {
+    res.locals.auth = req.isAuthenticated();
+    next();
+});
 webApp.use('/', indexRouter);
-webApp.use('/login', loginRouter);
-webApp.use('/logout',logoutRouter);
-webApp.use('/registration',registrationRouter);
+webApp.use('/bc/login', loginRouter);
+webApp.use('/bc/logout',logoutRouter);
+webApp.use('/bc/register',registrationRouter);
+webApp.use('/bc/accessRequest',requestAccessRouter);
 
 
 // catch 404 and forward to error handler

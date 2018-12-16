@@ -57,7 +57,3 @@ class UserData {
 
 }
 module.exports = UserData;
-UserData.getUserDataFromEmail('cami.231298@gmail.com',(res)=> {
-    res[0]._timestamp = new Date();
-    res[0].commitToDb();
-});

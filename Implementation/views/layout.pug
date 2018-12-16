@@ -22,24 +22,26 @@ html
               li
                   a(href='#') Dashboard
               li
+                  a(href='/bc/accessRequest') Private Requests
+              li
                   a(href='#') Anonymous queries
               li
-                  a(href='/logout') Logout
+                  a(href='/bc/logout') Logout
           else
               li.sidebar-brand
                   h2 Menu:
               li
-                  a(href='/') Home Page
+                  a(href='/')
+                    | Home Page
               li
-                  a(href='/login') Login / Register
+                  a(href='/bc/login') Login / Register
 
   // /#sidebar-wrapper
   // Page Content
   #page-content-wrapper
       .container-fluid
           header
-            .col-sm-1
-                a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
+            a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
           block content
   // /#page-content-wrapper
   // /#wrapper

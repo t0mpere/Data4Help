@@ -12,6 +12,10 @@ router.get('/',(req,res) => {
         });
     }else res.render('accessRequest');
 });
+router.get('/makeRequest',(req,res) => {
+    res.render('privateRequestForm')
+});
+
 router.post('/', function(req, res) {
     console.log(req.user._email,req.body.email);
     RequestServices.getPrivateData(req.user._email,req.body.email,(result) =>{

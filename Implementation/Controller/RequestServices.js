@@ -56,6 +56,3 @@ module.exports = {
     getPrivateRequests:getPrivateRequests,
     getPrivateData:getPrivateData
 };
-getPrivateData('giackosparrow@hotmail.it','cami.231298@gmail.com',(res) =>{
-   console.log(res);
-});

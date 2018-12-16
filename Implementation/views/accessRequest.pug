@@ -5,7 +5,7 @@ block content
         if auth
             script.
                 function loadTable(input){
-                    $.post( "/bc/accessRequest", { email:input.name}, function (data) {
+                    $.post( "/bc/accessRequest", { email:input.name }, function (data) {
 
                         var html = '';
                         for (var i = 0; i < data.res.length; i++)
@@ -20,22 +20,25 @@ block content
 
                     } );
                 }
-            .container-fluid(onload='load()')
+            .container-fluid
                 .row(style = 'padding: 20px')
                     .col-md-4
                     .col-md-4
-                        button.btn.btn-primary.btn-block.btn-lg(type='button')
+                        a.btn.btn-primary.btn-block.btn-lg(type='button', href = '/bc/accessRequest/makeRequest')
                             | MakeRequest
                     .col-md-4
                 .row(style = 'padding: 20px')
                     .col-md-4(style = 'padding: 20px')
+                        h3.font-italic Private Requests:
                         .list-group
                             unless privateRequests === undefined
                                 each val in privateRequests
                                     if val.accepted
-                                        a.list-group-item.active(role="button", name = val.PrivateCustomers_email, onclick = 'loadTable(this)')= val.PrivateCustomers_email
+                                        a.list-group-item.active.font-italic.font-weight-bold(href='#', name = val.PrivateCustomers_email, onclick = 'loadTable(this)')= val.PrivateCustomers_email
+                                            span.badge.badge-success.badge-pill Accepted
                                     else
                                         a.list-group-item.disabled(role="button", name = val.PrivateCustomers_email)= val.PrivateCustomers_email
+                                            span.badge.badge-danger.badge-pill Pending
                             else
                                 h2 No private requests yet.
                     .col-md-8(style = 'padding: 20px')

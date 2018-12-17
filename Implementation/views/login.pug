@@ -3,28 +3,29 @@ extends layout
 block content
     unless auth
         body.text-center
-            .row
-                .col-md-4
-                .col-md-4
-                    p
-                        if newReg
-                            h3 Success, you are registered.
-                    p
-                    form.form-signin(action='/bc/login', method='post')
-                        h1.h3.mb-3.font-weight-normal Please sign in
+            .container.jumbotron
+                .row
+                    .col-md-4
+                    .col-md-4
                         p
-                        label.sr-only(for='email') Email address
-                        input#email.form-control(type='email', name='email', placeholder='Email address', required='', autofocus='')
+                            if newReg
+                                h3 Success, you are registered.
                         p
-                        label.sr-only(for='password') Password
-                        input#password.form-control(type='password', name='password', placeholder='Password', required='')
-                        p
-                        button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+                        form.form-signin(action='/bc/login', method='post')
+                            h1.h3.mb-3.font-weight-normal Please sign in
+                            p
+                            label.sr-only(for='email') Email address
+                            input#email.form-control(type='email', name='email', placeholder='Email address', required='', autofocus='')
+                            p
+                            label.sr-only(for='password') Password
+                            input#password.form-control(type='password', name='password', placeholder='Password', required='')
+                            p
+                            button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
 
-                        t.text-center Not registered?
-                        p
-                        a.btn.btn-primary.btn-bd-primary(href = '/bc/register') Register
-                .col-md-4
+                            t.text-center Not registered?
+                            p
+                            a.btn.btn-primary.btn-bd-primary(href = '/bc/register') Register
+                    .col-md-4
     else
         p
         h1 You are already logged in

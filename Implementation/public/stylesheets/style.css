@@ -1,7 +1,21 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.def-padding{
+  margin: 20px;
+}
+.left-padding{
+  margin-left: 20px;
+}
+.error-template {padding: 40px 15px;text-align: center;}
+.error-actions {margin-top:15px;margin-bottom:15px;}
+.error-actions .btn { margin-right:10px; }
+.sidebar-btn {
+  position:absolute;
+  top:0;
+  left:0;
 }
 
 a {
-  color: #00B7FF;
+  color: #ffffff;
 }

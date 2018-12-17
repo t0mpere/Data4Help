@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    body.text-center
+        .jumbotron
+            .row
+                .col-md-12
+                    .error-template
+                        h1
+                            | Oops!
+                        |
+                        h2
+                            | Seems like you aren't authenticated
+                        |
+                        .error-details
+                            | Please Login to use this function
+                        |
+                        .error-actions
+                            a.btn.btn-primary.btn-lg(href='/') Home Page
+                            a.btn.btn-default.btn-lg(href='/bc/login') Login / Register

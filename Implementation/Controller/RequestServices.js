@@ -28,8 +28,12 @@ function denyPrivateRequest(PCEmail,BCEmail,callback) {
 function makePrivateRequest(BCEmail,PCEmail,callback) {
     PrivateRequest.getPrivateRequest(PCEmail,BCEmail,(res) =>{
         if (res === false) {
-            new PrivateRequest(new Date(),0,PCEmail,BCEmail).commitToDb();
-            callback(true);
+            new PrivateRequest({
+                timestamp:new Date(),
+                accepted:0,
+                PrivateCustomers_email:PCEmail,
+                BusinessCustomers_email:BCEmail}
+                ).commitToDb(callback);
         } else {
             callback(false);
         }
@@ -54,5 +58,6 @@ function getPrivateData(BCEmail,PCEmail,callback) {
 }
 module.exports = {
     getPrivateRequests:getPrivateRequests,
-    getPrivateData:getPrivateData
+    getPrivateData:getPrivateData,
+    makePrivateRequest:makePrivateRequest
 };

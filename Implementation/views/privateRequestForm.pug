@@ -3,17 +3,28 @@ extends layout
 block content
     body
         if auth
-            body.text-center
-                .row
-                    .col-md-4
-                    .col-md-4
-                        p
-                        form.form-signin(action='/bc/accessRequest/newRequest', method='post')
-                            h4.font-italic.font-weight-bold
-                            label.sr-only(for='email') Private Customer's email
-                            input#password.form-control(type='email', name='email', placeholder='Insert email', required='')
-                            button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
-                    .col-md-4
+            .container.jumbotron
+                body.text-center
+                    .row
+                        .col-md-4
+                            .figure-caption.text-left
+                                h3.font-italic Please complete the following form to make a private access request to a Private Customer
+                                h5.font-italic.font-weight-light Be sure to use a valid email to identify an already registered Private customer
+                        .col-md-4
+                            if result !== true
+                                form.form-signin(action='/bc/accessRequest/makeRequest', method='post')
+                                    .font-italic.left-padding.text-left Private Customer's email
+                                    label.sr-only.def-padding(for='email') Private Customer's email
+                                    input#password.form-control.def-padding(type='email', name='email', placeholder='Insert email', required='')
+                                    button.btn.btn-lg.btn-primary.btn-block.def-padding(type='submit') Submit
+                                if result === false
+                                    h3.font-weight-light.text-danger The inserted email is not valid
+                            else
+                                h3.font-weight-light.text-success Request Sent
+                                .btn-group
+                                    a.btn.btn-primary(href) Make another request
+                                    a.btn(href = '/bc/accessRequest') Go back
+                        .col-md-4
         else
             p
             h1.font-weight-bold Login to use this function.

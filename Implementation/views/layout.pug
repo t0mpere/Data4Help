@@ -41,7 +41,8 @@ html
   #page-content-wrapper
       .container-fluid
           header
-            a#menu-toggle.btn.btn-secondary(href='#menu-toggle') Toggle Menu
+          .sidebar-btn
+            a#menu-toggle.btn.btn-light(href='#menu-toggle') >>
           block content
   // /#page-content-wrapper
   // /#wrapper
@@ -49,6 +50,7 @@ html
   script.
       $("#menu-toggle").click(function (e) {
           e.preventDefault();
+          document.getElementById('menu-toggle').innerText = document.getElementById('menu-toggle').innerText === '>>' ? '<<' : '>>';
           $("#wrapper").toggleClass("toggled");
       });
 

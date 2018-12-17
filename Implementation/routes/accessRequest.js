@@ -4,16 +4,26 @@ let passport = require('passport');
 const UserServices = require('../Controller/UserServices');
 const RequestServices = require('../Controller/RequestServices');
 
+router.use(function(req, res, next) {
+    if(req.isAuthenticated())
+        next();
+    else res.render('deniedAccess')
+});
+
 router.get('/',(req,res) => {
-    if(req.isAuthenticated()){
         console.log(req.user._email);
         RequestServices.getPrivateRequests(req.user._email,(result) =>{
             res.render('accessRequest',{privateRequests:result});
         });
-    }else res.render('accessRequest');
 });
+
 router.get('/makeRequest',(req,res) => {
     res.render('privateRequestForm')
+});
+router.post('/makeRequest',(req,res) =>{
+    RequestServices.makePrivateRequest(req.user._email,req.body.email,(result) =>{
+        res.render('privateRequestForm',{result:result});
+    })
 });
 
 router.post('/', function(req, res) {

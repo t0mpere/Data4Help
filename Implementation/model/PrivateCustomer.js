@@ -20,12 +20,15 @@ class PrivateCustomer extends Customer{
             //birthplaceProvincia: privateCustomer._placeOfBirthProvincia // Optional
         });
     }
-
-    isInDb(callback){
-        PrivateCustomer.getCustomerFromDb(this.email,(res)=>{
+    static isPrivateCustomerInDb(email,callback){
+        PrivateCustomer.getPrivateCustomerFromDb(email,(res)=>{
             if (res === false) callback(false);
             else callback(true);
         })
+    }
+
+    isInDb(callback){
+        PrivateCustomer.isPrivateCustomerInDb(this.email,callback);
     }
 
     static getPrivateCustomerFromDb(email,callback){
@@ -39,15 +42,7 @@ class PrivateCustomer extends Customer{
                     let date = new Date(res[0].dateOfBirth);
                     //mapping from tuple to object
                     let pc = new PrivateCustomer(
-                        res[0].email,
-                        res[0].password,
-                        res[0].name,
-                        res[0].surname,
-                        res[0].sex,
-                        res[0].codiceFiscale,
-                        date,
-                        res[0].placeOfBirth,
-                        res[0].placeOfBirthProvincia
+                        res[0]
                     );
                     callback(pc);
                 }
@@ -76,7 +71,7 @@ class PrivateCustomer extends Customer{
             this._sex = args.sex;
         }else {
             console.log(args.sex);
-            throw 'Wrong value for sex, use provided enum: ' + sex;
+            throw 'Wrong value for sex, use provided enum: ' + args.sex;
         }
         this._email = args.email;
         this._password = args.password;
@@ -85,9 +80,9 @@ class PrivateCustomer extends Customer{
         this._dateOfBirth = args.dateOfBirth;
         this._placeOfBirth = args.placeOfBirth;
 
-        if(PrivateCustomer.getCf(this) === args.cf)
+        if(PrivateCustomer.getCf(this) === args.codiceFiscale)
 
-            this._cf = args.cf;
+            this._codiceFiscale = args.codiceFiscale;
         else throw 'invalid cf';
 
     }
@@ -111,7 +106,7 @@ class PrivateCustomer extends Customer{
                     this._sex,
                     this._placeOfBirth,
                     this._dateOfBirth,
-                    this._cf
+                    this._codiceFiscale
                 ]
             ];
             db.con.query(sql, values,(err) => {
@@ -146,7 +141,7 @@ class PrivateCustomer extends Customer{
         return this._sex;
     }
     get cf() {
-        return this._cf;
+        return this._codiceFiscale;
     }
 
     get dateOfBirth() {

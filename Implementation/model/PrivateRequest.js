@@ -1,4 +1,5 @@
 const db = require('../database/DbConnection');
+const PrivateCustomer = require('../model/PrivateCustomer');
 class PrivateRequest {
 
     get _timestamp() {
@@ -25,21 +26,28 @@ class PrivateRequest {
     }
 
     commitToDb(callback) {
-        let sql = "INSERT INTO PrivateRequest(accepted,BusinessCustomers_email,PrivateCustomers_email) VALUES (?)";
-        let values = [
-            [
-                this.accepted,
-                this.BusinessCustomers_email,
-                this.PrivateCustomers_email
-            ]
-        ];
-        db.con.query(sql, values, (err) => {
-            if (err) {
-                callback(false);
-                throw err;
-            }
-            else callback(true);
+        PrivateCustomer.isPrivateCustomerInDb(this._privateCustomerEmail,(res) =>{
+            console.log(res);
+           if(res){
+               let sql = "INSERT INTO PrivateRequest(accepted,BusinessCustomers_email,PrivateCustomers_email) VALUES (?)";
+               let values = [
+                   [
+                       this.accepted,
+                       this.BusinessCustomers_email,
+                       this.PrivateCustomers_email
+                   ]
+               ];
+               db.con.query(sql, values, (err) => {
+                   if (err) {
+                       callback(false);
+                       throw err;
+                   }
+                   else callback(true);
+               });
+           } else callback(res);
         });
+
+
     }
 
     static getPrivateRequest(PCEmail, BCEmail, callback) {

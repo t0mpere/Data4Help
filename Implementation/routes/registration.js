@@ -15,7 +15,7 @@ router.post('/', (req,res) =>{
         })
     }else
     {
-        res.redirect("/");
+        res.render('deniedAccess');
     }
 
 });

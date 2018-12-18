@@ -22,9 +22,6 @@ class Customer {
     get password() {
         return this._password;
     }
-    static getCustomerFromDb(email,callback){
-
-    }
 
 
 

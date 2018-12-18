@@ -35,6 +35,7 @@ webApp.use(cookieParser());
  */
 webApp.use(express.static(path.join(__dirname, 'public')));
 webApp.use('/bootstrap',express.static(__dirname + '/node_modules/bootstrap/'));
+webApp.use('/chart',express.static(__dirname + '/node_modules/chart.js/'));
 
 /*
 *Login using passport.js

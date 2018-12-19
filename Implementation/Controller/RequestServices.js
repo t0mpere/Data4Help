@@ -1,6 +1,6 @@
 const PrivateRequest = require('../model/PrivateRequest');
 const UserData = require('../model/UserData');
-const AnonRequest = require('../model/AnonymousRequest')
+const AnonRequest = require('../model/AnonymousRequest');
 /*
 *
 *   Incoming Request handler functions:

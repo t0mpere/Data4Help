@@ -6,8 +6,10 @@ class AnonymousRequest{
         this.timeOfSubmission = args.timeOfSubmission;
         this.BusinessCustomer_email = BCEmail;
         this.title = args.title;
-        this.periodical = args.update;
+        this.periodical = args.periodical;
         this.closed = args.closed? 1 : 0;
+        this.date_from = args.date_from;
+        this.date_to = args.date_to;
         this.lat_ne = args.lat_ne;
         this.long_ne = args.long_ne;
         this.lat_sw = args.lat_sw;
@@ -38,17 +40,27 @@ class AnonymousRequest{
                 break;
         }
     }
-
+    updateNextUpdate(callback){
+        let sql = 'UPDATE Queries SET next_update = ?'
+        db.con.query(sql,[[this.nextUpdate]],(err,res)=>{
+            if(err){
+                callback(false);
+                throw err;
+            }else callback(true)
+        })
+    }
 
 
     commitToDb(callback){
-        let sql = "INSERT INTO Queries(BusinessCustomer_email,title,periodical,closed,lat_ne,long_ne,lat_sw,long_sw,age_from,age_to,avg_bp_max,avg_bp_min,avg_bpm,num,next_update) VALUES (?)";
+        let sql = "INSERT INTO Queries(BusinessCustomer_email,title,periodical,closed,date_from,date_to,lat_ne,long_ne,lat_sw,long_sw,age_from,age_to,avg_bp_max,avg_bp_min,avg_bpm,num,next_update) VALUES (?)";
         let values = [
             [
                 this.BusinessCustomer_email,
                 this.title,
                 this.periodical,
                 this.closed,
+                this.date_from,
+                this.date_to,
                 this.lat_ne,
                 this.long_ne,
                 this.lat_sw,
@@ -62,14 +74,21 @@ class AnonymousRequest{
                 this.nextUpdate
             ]
         ];
-        db.con.query(sql,values,(err) => {
-            if (err) {
-                callback(false);
-                throw err;
+        AnonymousRequest.isInDb(this.BusinessCustomer_email,this,(res) =>{
+            if(res) callback(false);
+            else {
+                db.con.query(sql,values,(err) => {
+                    if (err) {
+                        callback(false);
+                        throw err;
+                    }
+                    else callback(true);
+                });
             }
-            else callback(true);
-        });
+        })
+
     }
+
 
     static getAnonymousRequestsByBC(BCEmail,callback){
         let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ?";
@@ -105,7 +124,33 @@ class AnonymousRequest{
         AnonymousRequest.isInDb(BCEmail, this, callback);
     }
 
-}
+    compute(){
+        let sql = 'SELECT avg (maxBloodPressure), avg(minBloodPressure),avg (hearthRate),count(*)\n' +
+            'FROM UserData\n' +
+            'WHERE\n' +
+            '    (lat >= ?) AND (lat <= ?) AND (`long` >= ?) AND (`long` <= ?) and\n' +
+            '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) >= ? and\n' +
+            '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) <= ?\n'
+            '    (datediff(?,timeOfAcquisition) <= 0) and (datediff(timeOfAcquisition,?) <= 0)\n';
+        db.con.query(sql,[[this.lat_sw],[this.lat_ne],[this.long_sw],[this.long_ne],[this.age_from],[this.age_to],[this.date_to],[this.date_from]],(err,res)=>{
+            let values = [
+                [
+                    this.id,
+                    this.BusinessCustomer_email,
+                    Object.values(res[0])[0],
+                    Object.values(res[0])[1],
+                    Object.values(res[0])[2],
+                    Object.values(res[0])[3],
+                    new Date()
+                ]
+            ];
+            db.con.query('INSERT into QueriesData values (?)',values,(error,result)=>{
+                if (error) throw error;
+            })
+        })
 
+    }
+
+}
 module.exports = AnonymousRequest;
 

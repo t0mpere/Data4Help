@@ -15,7 +15,7 @@ class AnonymousRequest{
     }
 
     commitToDb(callback){
-        let sql = "INSERT INTO Queries(BusinessCustomers_email,serializedPArameters,serializedResult,closed,periodical,nextUpdate,Title,QueryID) VALUES (?)";
+        let sql = "INSERT INTO Queries(BusinessCustomers_email,serializedParameters,serializedResult,closed,periodical,nextUpdate,Title,QueryID) VALUES (?)";
         let values = [
             [
                 this._businessCustomer_email,

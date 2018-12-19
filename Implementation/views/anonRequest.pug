@@ -4,22 +4,94 @@ block content
     body.text-center
         if auth
             .row
-                .col-md-4
-                .col-md-4
+                .col-md-3
+                .col-md-6
                     form(action='/bc/anonRequest/newRequest', method='post')
-                        label(for='title') Title
-                        input#title.form-control(type='text', name='title', placeholder='Enter a title')
-                        label(for='update') Update
-                        select#update.form-control
-                            option(value='1d') 1 per day
-                            option(value='2d') 2 per day
-                            option(value='1w') 1 per week
-                            option(value='1m') 1 per month
-                        label(for='param') Parameters request
-                        input#param.form-control(type='text', name='param', placeholder='Enter parameter')
+                        h2 Make a new anonymous Query
                         hr
-                        button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
-                .col-md-4
+                        div.form-group
+                            label(for='title') Title
+                                input#title.input-field(type='text', name='title', placeholder='Enter a title')
+                        div.form-group
+                            label(for='update') Update
+                                input#update.input-field(type='checkbox', name='update')
+                                select#update
+                                    option(value='1d') 1 per day
+                                    option(value='2d') 2 per day
+                                    option(value='1w') 1 per week
+                                    option(value='1m') 1 per month
+                        div.form-group
+                            label(for='param') Data request:
+                                br
+                                label
+                                    input(type='checkbox')
+                                    | Average BP
+                                label
+                                    input(type='checkbox')
+                                    | Deviation BP
+                                br
+                                label
+                                    input(type='checkbox')
+                                    | Average BPM
+                                label
+                                    input(type='checkbox')
+                                    | Deviation BPM
+                        div.form-group
+                            label(for='age') Age:
+                                br
+                                label(for='age') From:
+                                    input(type='number', name='age1', value='')
+                                label(for='age') To:
+                                    input(type='number', name='age2', value='')
+                        div.form-group
+                            label(for='date') Period:
+                                br
+                                label(for='date') From:
+                                    input#date(type='date', name='date1', placeholder='dd/mm/yyyy')
+                                label(for='date') To:
+                                    input#date(type='date', name='date2', placeholder='dd/mm/yyyy')
+                        script.
+                            function check(input) {
+                                let tmp ;
+                                if (!input)
+                                    tmp = document.getElementById('date');
+                                else
+                                tmp = input;
+
+                                // First check for the pattern
+                                if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(tmp))
+                                    return false;
+
+                                // Parse the date parts to integers
+                                var parts = dateString.split("/");
+                                var day = parseInt(parts[1], 10);
+                                var month = parseInt(parts[0], 10);
+                                var year = parseInt(parts[2], 10);
+
+                                // Check the ranges of month and year
+                                if (year < 1000 || year > 3000 || month === 0 || month > 12)
+                                    tmp.setCustomValidity('Invalid date format!')
+
+                                var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                                // Adjust for leap years
+                                if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+                                    monthLength[1] = 29;
+
+                                // Check the range of the day
+                                if (!(day > 0 && day <= monthLength[month - 1]))
+                                    tmp.setCustomValidity('Invalid date format')
+                                }
+                        div.form-group
+                            label Location:
+                            input#title.input-field(type='text', name='location', placeholder='Enter the location')
+                        hr
+                        button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'check()') Submit
+                .col-md-3
+
+        else if requested
+            h1 Your request has been received successfully!
+
         else
             h1 Login to use this function
 

@@ -68,7 +68,7 @@ function addUserDataToDb(data,callback){
  *
  */
 function registerBusinessCustomer(args,callback){
-    args._active = 0;
+    args.active = 0;
     new BusinessCustomer(args).commitToDb(callback);
 
 }

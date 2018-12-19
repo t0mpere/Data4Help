@@ -17,6 +17,8 @@ router.post('/', (req,res) =>{
         UserServices.registerBusinessCustomer(req.body,(result) =>{
             if(result !== false){
                 res.render('login',{auth: req.isAuthenticated(),newReg: true})
+            }else {
+                res.render('login',{auth: req.isAuthenticated(),newReg: false})
             }
         })
     }

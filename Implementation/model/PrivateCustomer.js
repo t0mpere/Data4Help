@@ -82,7 +82,7 @@ class PrivateCustomer extends Customer{
 
         if(PrivateCustomer.getCf(this) === args.codiceFiscale)
 
-            this._codiceFiscale = args.codiceFiscale;
+        this._codiceFiscale = args.codiceFiscale;
         else throw 'invalid cf';
 
     }

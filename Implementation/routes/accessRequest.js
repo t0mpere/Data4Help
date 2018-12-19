@@ -3,9 +3,10 @@ let router = express.Router();
 let passport = require('passport');
 const UserServices = require('../Controller/UserServices');
 const RequestServices = require('../Controller/RequestServices');
+const Utils = require('../routes/utils');
 
 router.use(function(req, res, next) {
-    if(req.isAuthenticated())
+    if(Utils.isBusinessCustomer(req))
         next();
     else res.render('deniedAccess')
 });

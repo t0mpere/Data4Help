@@ -2,9 +2,10 @@ let express = require('express');
 let router = express.Router();
 let passport = require('passport');
 const UserServices = require('../Controller/UserServices');
+const Utils = require('../routes/utils');
 
 router.get('/', (req, res) => {
-    res.render('registration',{auth: req.isAuthenticated()});
+    res.render('registration',{auth: Utils.isBusinessCustomer(req)});
 });
 router.post('/', (req,res) =>{
     if(!req.isAuthenticated()){

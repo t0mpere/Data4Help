@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let passport = require('passport');
+const Utils = require('../routes/utils');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

@@ -86,4 +86,4 @@ function registerBusinessCustomer(args,callback){
      isCustomerRegistered:isCustomerRegistered,
      registerBusinessCustomer:registerBusinessCustomer
 
- }
+ };

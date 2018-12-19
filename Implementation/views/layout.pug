@@ -11,14 +11,15 @@ html
 
 
 
+
 #wrapper
   // Sidebar
   #sidebar-wrapper
       ul.sidebar-nav
           p
+          li.sidebar-brand
+              h2 Menu:
           if auth
-              li.sidebar-brand
-                  h2 Menu:
               li
                   a(href='/') Home Page
               li
@@ -29,9 +30,12 @@ html
                   a(href='/bc/anonRequest') Anonymous queries
               li
                   a(href='/bc/logout') Logout
+          else if isSystemManager
+              li
+                  a(href='/sm/pendingRequests') Pending Requests
+              li
+                  a(href='/bc/logout') Logout
           else
-              li.sidebar-brand
-                  h2 Menu:
               li
                   a(href='/')
                     | Home Page

@@ -94,9 +94,29 @@ class BusinessCustomer extends Customer{
             callback(bc);
         })
     }
-    setActiveStatus(value,callback){
+    static getPendingBusinessCustomersFromDb(callback){
+        let sql = 'SELECT * FROM BusinessCustomers WHERE active = 0';
+        db.con.query(sql,function (err,res) {
+            if (err) {
+                callback(false);
+                throw err;
+            }
+
+            if(res.length === 0) {
+                callback(false);
+                return;
+            }
+            //mapping from tuple to object
+            res.map(function (value,index) {
+                return new BusinessCustomer(value);
+            });
+            callback(res);
+        })
+
+    }
+    static setActiveStatus(email,value,callback){
         let sql = "UPDATE BusinessCustomers  SET active = ?  WHERE email = ? ;";
-        db.con.query(sql,[value,this.email],function (err) {
+        db.con.query(sql,[value,email],function (err) {
             if (err) {
                 callback(false);
                 throw err;
@@ -105,11 +125,9 @@ class BusinessCustomer extends Customer{
             callback(true);
         })
     }
+    setActiveStatus(value,callback){
+        BusinessCustomer.setActiveStatus(this.email,value,callback);
+    }
 
 }
 module.exports = BusinessCustomer;
-let bc = BusinessCustomer.getBusinessCustomerFromDb('acme@corp.com',(res) =>{
-    res.setActiveStatus(1,(res) => {
-        console.log(res);
-    })
-});

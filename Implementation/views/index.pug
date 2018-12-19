@@ -4,6 +4,8 @@ block content
     .jumbotron.text-center
         h1 Data4Help
         p #{title}
-        if auth
+        if auth || isSystemManager
             #welcome Welcome:
             h4 #{user}
+            if isSystemManager
+                h1 You are logged in as a System Manager

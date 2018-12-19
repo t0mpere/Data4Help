@@ -4,7 +4,9 @@ let passport = require('passport');
 const Utils = require('../routes/utils');
 
 router.get('/', (req, res) => {
-    res.render('login',{auth: Utils.isBusinessCustomer(req), newReg: false});
+    if(!req.isAuthenticated()){
+        res.render('login',{newReg: false});
+    }res.redirect('/bc/logout');
 });
 
 router.post('/', passport.authenticate('local', { failureRedirect: '/login' }),

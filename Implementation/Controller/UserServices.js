@@ -79,11 +79,34 @@ function registerBusinessCustomer(args,callback){
  *   Will interface only with the web app ( system manager side) providing methods to see the business customers
  *   who want to register and to accept / reject them
  */
+function getPendingBusinessCustomers(callback){
+    BusinessCustomer.getPendingBusinessCustomersFromDb((res) => {
+        if(res !== false) {
+            res = res.map((value, index) => {
+                value.password = 'obfuscated';
+                return value;
+            });
+        }
+        callback(res);
+    });
+}
+function setBusinessCustomerActiveStatus(email,value,callback){
+    BusinessCustomer.setActiveStatus(email,value,callback);
+}
+function setBusinessCustomerActive(email,callback){
+    setBusinessCustomerActiveStatus(email,1,callback);
+}
+function setBusinessCustomerDenied(email,callback){
+    setBusinessCustomerActiveStatus(email,2,callback);
+}
 
  module.exports = {
      registerPrivateCustomer:registerPrivateCustomer,
      addUserDataToDb:addUserDataToDb,
      isCustomerRegistered:isCustomerRegistered,
-     registerBusinessCustomer:registerBusinessCustomer
+     registerBusinessCustomer:registerBusinessCustomer,
+     getPendingBusinessCustomers:getPendingBusinessCustomers,
+     setBusinessCustomerActive:setBusinessCustomerActive,
+     setBusinessCustomerDenyed:setBusinessCustomerDenied
 
  };

@@ -4,6 +4,11 @@ let passport = require('passport');
 const UserServices = require('../Controller/UserServices');
 const Utils = require('../routes/utils');
 
+router.use(function (req,res,next) {
+    if(req.isAuthenticated()) {
+        res.render('error',{error:{status:'not logged in',stack: null}});
+    }else next();
+});
 router.get('/', (req, res) => {
     res.render('registration',{auth: Utils.isBusinessCustomer(req)});
 });
@@ -14,9 +19,6 @@ router.post('/', (req,res) =>{
                 res.render('login',{auth: req.isAuthenticated(),newReg: true})
             }
         })
-    }else
-    {
-        res.render('deniedAccess');
     }
 
 });

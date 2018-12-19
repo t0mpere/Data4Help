@@ -8,6 +8,7 @@ const uuid = require('uuid/v4');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const BusinessCustomer = require('./model/BusinessCustomer');
+const Utils = require('./routes/utils');
 
 /*
 * Routes declarations
@@ -18,6 +19,7 @@ let logoutRouter = require('./routes/logout');
 let registrationRouter = require('./routes/registration');
 let requestAccessRouter = require('./routes/accessRequest');
 let anonRequestRouter = require('./routes/anonRequest');
+let systemManagerRouter = require('./routes/systemManager');
 
 var webApp = express();
 
@@ -88,7 +90,9 @@ passport.deserializeUser((user, done) => {
 * routing requests
  */
 webApp.use(function(req, res, next) {
-    res.locals.auth = req.isAuthenticated();
+    res.locals.auth = Utils.isBusinessCustomer(req);
+    res.locals.isSystemManager = Utils.isSystemManager(req);
+    console.log(res.locals.auth);
     next();
 });
 webApp.use('/', indexRouter);
@@ -97,6 +101,7 @@ webApp.use('/bc/logout',logoutRouter);
 webApp.use('/bc/register',registrationRouter);
 webApp.use('/bc/accessRequest',requestAccessRouter);
 webApp.use('/bc/anonRequest',anonRequestRouter);
+webApp.use('/sm/',systemManagerRouter);
 
 
 // catch 404 and forward to error handler

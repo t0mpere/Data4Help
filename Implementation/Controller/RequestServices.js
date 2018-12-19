@@ -1,5 +1,6 @@
 const PrivateRequest = require('../model/PrivateRequest');
 const UserData = require('../model/UserData');
+const AnonRequest = require('../model/AnonymousRequest')
 /*
 *
 *   Incoming Request handler functions:
@@ -39,6 +40,7 @@ function makePrivateRequest(BCEmail,PCEmail,callback) {
         }
     })
 }
+
 function getPrivateRequests(BCEmail,callback) {
     PrivateRequest.getPrivateRequestsByBC(BCEmail,callback);
 }
@@ -56,8 +58,20 @@ function getPrivateData(BCEmail,PCEmail,callback) {
 
     })
 }
+
+function makeAnonRequest(BCEmail, params, callback) {
+    AnonRequest.isInDb(BCEmail, params, (res) =>{
+        if (res === false) {
+            new AnonRequest(BCEmail,params).commitToDb(callback);
+        }
+        else callback(false);
+    })
+
+}
+
 module.exports = {
     getPrivateRequests:getPrivateRequests,
     getPrivateData:getPrivateData,
-    makePrivateRequest:makePrivateRequest
+    makePrivateRequest:makePrivateRequest,
+    makeAnonRequest:makeAnonRequest
 };

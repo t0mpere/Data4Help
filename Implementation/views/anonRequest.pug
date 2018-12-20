@@ -50,9 +50,9 @@ block content
                             function check(input) {
                                 let tmp ;
                                 if (!input)
-                                    tmp = document.getElementById('date');
+                                    tmp = document.getElementById('date_from').value;
                                 else
-                                tmp = input;
+                                    tmp = input;
 
                                 // First check for the pattern
                                 if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(tmp))
@@ -120,7 +120,7 @@ block content
                             }
 
                             function submit(){
-                                check();
+                                check(document.getElementById('date_from').value);
                                 var u = document.getElementById('update');
                                 $.post('/bc/anonRequest/makeRequest', {
                                     title : document.getElementById('title').value,

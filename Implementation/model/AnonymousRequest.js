@@ -98,7 +98,7 @@ class AnonymousRequest{
                 let tuple = res.map((value) => {
                     return new AnonymousRequest(value.BusinessCustomer_email,value)
                 });
-                console.log(tuple);
+                //console.log(tuple);
                 callback(tuple)
             }else callback(false);
         })

@@ -136,14 +136,14 @@ block content
                                     long_ne : rectangle.getBounds().getNorthEast().lng(),
                                     lat_sw : rectangle.getBounds().getSouthWest().lat(),
                                     long_sw : rectangle.getBounds().getSouthWest().lng()
-                                })
+                                }, function(data) {
+                                    document.getElementById('confirmed').value = data.result;
+                                    }
+                                )
                             }
                         hr
                         button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'submit()') Submit
-                    else if result
-                        h1 ok
-                    else
-                        h1 no
+                        h1#confirmed
                 .col-md-3
 
 

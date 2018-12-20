@@ -9,6 +9,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const BusinessCustomer = require('./model/BusinessCustomer');
 const Utils = require('./routes/utils');
+const Scheduler = require('./Controller/Scheduler');
 
 /*
 * Routes declarations
@@ -121,7 +122,7 @@ webApp.use(function(err, req, res, next) {
 });
 
 setInterval(()=>{
-
+    Scheduler.schedule();
 },10);
 
 module.exports = webApp;

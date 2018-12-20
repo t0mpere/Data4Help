@@ -27,7 +27,7 @@ class AnonymousRequest{
     calculateNextUpdate(){
         switch (this.periodical){
             case 0:
-                //do nothing
+                this.closed = 1;
                 break;
             case 1:
                 this.nextUpdate.setDate(this.nextUpdate.getDate() + 1);

@@ -14,6 +14,7 @@ function schedule() {
                 x.calculateNextUpdate();
                 x.updateNextUpdate((res)=>{
                     if(!res) console.log('ERROR: something bad happened during scheduling');
+                    console.log(res);
                 });
             });
         }

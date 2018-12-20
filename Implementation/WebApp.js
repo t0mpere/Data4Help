@@ -123,7 +123,7 @@ webApp.use(function(err, req, res, next) {
 
 setInterval(()=>{
     Scheduler.schedule();
-},10);
+},1000);
 
 module.exports = webApp;
 

@@ -132,7 +132,7 @@ class AnonymousRequest{
             '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) >= ? and\n' +
             '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) <= ?\n'
             '    (datediff(?,timeOfAcquisition) <= 0) and (datediff(timeOfAcquisition,?) <= 0)\n';
-        db.con.query(sql,[[this.lat_sw],[this.lat_ne],[this.long_sw],[this.long_ne],[this.age_from],[this.age_to],[this.date_to],[this.date_from]],(err,res)=>{
+        db.con.query(sql,[[this.lat_sw],[this.lat_ne],[this.long_sw],[this.long_ne],[this.age_from],[this.age_to],[this.date_to === undefined ? this.nextUpdate : this.date_to],[this.date_from]],(err,res)=>{
             let values = [
                 [
                     this.id,

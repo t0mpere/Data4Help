@@ -26,7 +26,7 @@ router.post('/makeRequest',(req,res) =>{
 
     console.log(req.user);
     RequestServices.makeAnonRequest(req.user._email,params,(result) => {
-        res.render('anonRequest',{result : result})
+        res.send({result : result})
     });
 
 });

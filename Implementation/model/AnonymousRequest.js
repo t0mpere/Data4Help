@@ -41,12 +41,13 @@ class AnonymousRequest{
         }
     }
     updateNextUpdate(callback){
-        let sql = 'UPDATE Queries SET next_update = ?'
-        db.con.query(sql,[[this.nextUpdate]],(err,res)=>{
+        let sql = 'UPDATE Queries SET next_update = ? , closed = ? where BusinessCustomer_email = ? and id = ?'
+        db.con.query(sql,[[this.nextUpdate],[this.closed],[this.BusinessCustomer_email],[this.id]],(err,res)=>{
             if(err){
                 callback(false);
                 throw err;
             }else callback(true)
+            console.log(res);
         })
     }
 
@@ -145,6 +146,7 @@ class AnonymousRequest{
                 ]
             ];
             db.con.query('INSERT into QueriesData values (?)',values,(error,result)=>{
+                
                 if (error) throw error;
             })
         })

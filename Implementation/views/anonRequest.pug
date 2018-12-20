@@ -137,7 +137,7 @@ block content
                                     lat_sw : rectangle.getBounds().getSouthWest().lat(),
                                     long_sw : rectangle.getBounds().getSouthWest().lng()
                                 }, function(data) {
-                                    document.getElementById('confirmed').value = data.result;
+                                    document.getElementById('confirmed').innerText = data.result;
                                     }
                                 )
                             }

@@ -26,6 +26,10 @@ function denyPrivateRequest(PCEmail,BCEmail,callback) {
 *   requests (updates or results) and to make others, both individual and anonymized requests.
 *
  */
+function getQueryData() {
+    //do 1000 check here
+}
+
 function makePrivateRequest(BCEmail,PCEmail,callback) {
     PrivateRequest.getPrivateRequest(PCEmail,BCEmail,(res) =>{
         if (res === false) {

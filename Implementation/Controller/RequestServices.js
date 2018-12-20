@@ -26,8 +26,16 @@ function denyPrivateRequest(PCEmail,BCEmail,callback) {
 *   requests (updates or results) and to make others, both individual and anonymized requests.
 *
  */
-function getQueryData() {
-    //do 1000 check here
+function getQueryData(BCEmail,title,callback) {
+    AnonRequest.getAnonymousRequestByBC(BCEmail,title,(res) =>{
+        res.getQueryData(callback);
+    });
+}
+function getQueries(BCEmail,callback) {
+    AnonRequest.getAnonymousRequestsByBC(BCEmail,(res)=>{
+        if(!res) callback(false);
+        else callback(res);
+    })
 }
 
 function makePrivateRequest(BCEmail,PCEmail,callback) {
@@ -77,5 +85,7 @@ module.exports = {
     getPrivateRequests:getPrivateRequests,
     getPrivateData:getPrivateData,
     makePrivateRequest:makePrivateRequest,
-    makeAnonRequest:makeAnonRequest
+    makeAnonRequest:makeAnonRequest,
+    getQueryData:getQueryData,
+    getQueries:getQueries
 };

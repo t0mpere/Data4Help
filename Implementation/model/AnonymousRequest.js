@@ -1,4 +1,5 @@
 const db = require('../database/Dbconnection');
+const mailServer = require('../Controller/MailServer').mailServer;
 
 class AnonymousRequest{
 
@@ -20,7 +21,7 @@ class AnonymousRequest{
         this.avg_bp_min = args.avg_bp_min === 'true' ? 1 : 0;
         this.avg_bpm = args.avg_bpm === 'true' ? 1 : 0;
         this.id = args.id;
-        this.nextUpdate = (args.nextUpdate instanceof Date) ? args.nextUpdate : new Date();
+        this.next_update = (args.next_update !== undefined) ? args.next_update : new Date();
     }
 
     calculateNextUpdate(){
@@ -29,24 +30,23 @@ class AnonymousRequest{
                 this.closed = 1;
                 break;
             case 1:
-                this.nextUpdate.setDate(this.nextUpdate.getDate() + 1);
+                this.next_update.setDate(this.next_update.getDate() + 1);
                 break;
             case 2:
-                this.nextUpdate.setDate(this.nextUpdate.getDate() + 7);
+                this.next_update.setDate(this.next_update.getDate() + 7);
                 break;
             case 3:
-                this.nextUpdate.setDate(this.nextUpdate.getDate() + 30);
+                this.next_update.setDate(this.next_update.getDate() + 30);
                 break;
         }
     }
     updateNextUpdate(callback){
         let sql = 'UPDATE Queries SET next_update = ? , closed = ? where BusinessCustomer_email = ? and id = ?'
-        db.con.query(sql,[[this.nextUpdate],[this.closed],[this.BusinessCustomer_email],[this.id]],(err,res)=>{
+        db.con.query(sql,[[this.next_update],[this.closed],[this.BusinessCustomer_email],[this.id]],(err, res)=>{
             if(err){
                 callback(false);
                 throw err;
-            }else callback(true)
-            console.log(res);
+            }else callback(true);
         })
     }
 
@@ -70,7 +70,7 @@ class AnonymousRequest{
                 this.avg_bp_max,
                 this.avg_bp_min,
                 this.avg_bpm,
-                this.nextUpdate
+                this.next_update
             ]
         ];
         AnonymousRequest.isInDb(this.BusinessCustomer_email,this,(res) =>{
@@ -92,7 +92,11 @@ class AnonymousRequest{
     static getAnonymousRequestsByBC(BCEmail,callback){
         let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ?";
         db.con.query(sql,[[BCEmail]],(err,res) =>{
-            if(err) throw err;
+
+            if(err) {
+                callback(false);
+                throw err;
+            }
             if(res.length) {
                 let tuple = res.map((value) => {
                     return new AnonymousRequest(value.BusinessCustomer_email,value)
@@ -122,6 +126,24 @@ class AnonymousRequest{
     isInDb(BCEmail, callback){
         AnonymousRequest.isInDb(BCEmail, this, callback);
     }
+    getQueryData(callback){
+        let sql = "SELECT * FROM QueriesData WHERE bc_email = ? and id = ?";
+        db.con.query(sql,[[this.BusinessCustomer_email],[this.id]],(err,res) =>{
+            if(err) throw err;
+            if(res.length) {
+                let tuple = res.map((value) => {
+                    if(value.num <= 1000){
+                        value.avg_bp_max = 0;
+                        value.avg_bp_min = 0;
+                        value.avg_bpm = 0;
+                    }
+                    return value;
+                });
+                //console.log(tuple);
+                callback(tuple)
+            }else callback(false);
+        })
+    }
 
     compute(){
         let sql = 'SELECT avg (maxBloodPressure), avg(minBloodPressure),avg (hearthRate),count(*)\n' +
@@ -131,7 +153,7 @@ class AnonymousRequest{
             '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) >= ? and\n' +
             '    (datediff(CURRENT_DATE,(SELECT dateOfBirth from PrivateCustomers where PrivateCustomers_email = email)) / 365.265 ) <= ?\n'
             '    (datediff(?,timeOfAcquisition) <= 0) and (datediff(timeOfAcquisition,?) <= 0)\n';
-        db.con.query(sql,[[this.lat_sw],[this.lat_ne],[this.long_sw],[this.long_ne],[this.age_from],[this.age_to],[this.date_to === undefined ? this.nextUpdate : this.date_to],[this.date_from]],(err,res)=>{
+        db.con.query(sql,[[this.lat_sw],[this.lat_ne],[this.long_sw],[this.long_ne],[this.age_from],[this.age_to],[this.date_to === undefined ? this.next_update : this.date_to],[this.date_from]],(err, res)=>{
             let values = [
                 [
                     this.id,
@@ -144,13 +166,38 @@ class AnonymousRequest{
                 ]
             ];
             db.con.query('INSERT into QueriesData values (?)',values,(error,result)=>{
-                
                 if (error) throw error;
+                else {
+                    console.log(this.BusinessCustomer_email);
+                    mailServer.sendMail({
+                        from:'data4help@mail.com',
+                        to: this.BusinessCustomer_email,
+                        subject: 'Your query '+this.title+ ' has been processed.',
+                        text: Object.values(res[0])[3] >= 1000 ? 'Result has been anonymized successfuly': 'Unfortunately Data4Help could not anonymize data acquired by your query'
+                    },function (error,info) {
+                        console.log(info.result)
+                    })
+                }
             })
         })
 
     }
 
+    static getAnonymousRequestByBC(BCEmail,title, callback) {
+        console.log('title:',title);
+        let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ? AND title = ?";
+        db.con.query(sql,[[BCEmail],[title]],(err,res) =>{
+            if(err) {
+                callback(false);
+                throw err;
+            }
+            if(res !== undefined) {
+                let result = new AnonymousRequest(res[0].BusinessCustomer_email,res[0]);
+                //console.log(tuple);
+                callback(result)
+            }else callback(false);
+        })
+    }
 }
 module.exports = AnonymousRequest;
 

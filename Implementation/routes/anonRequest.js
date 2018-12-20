@@ -10,8 +10,29 @@ router.use(function(req, res, next) {
     else res.render('deniedAccess')
 });
 
-router.get('/',(req,res) => {
+router.get('/makeRequest',(req,res) => {
     res.render('anonRequest')
+});
+
+router.get('/',(req,res) => {
+    RequestServices.getQueries(req.user._email,(result)=>{
+        console.log(result);
+        if(result.length > 0){
+            res.render('anonRequestViewer',{queries:result})
+        }
+    })
+
+});
+router.post('/',(req,res) => {
+    RequestServices.getQueryData(req.user._email,req.body.title,(result) => {
+        console.log('result: ',result);
+        if(result.length > 0){
+            res.send({res:result})
+        }else {
+            res.send({res:result});
+        }
+    })
+
 });
 
 router.post('/makeRequest',(req,res) =>{

@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `Data4Help`.`Queries` (
   `serializedResult` LONGBLOB NULL DEFAULT NULL,
   `closed` BINARY(1) NULL DEFAULT '0',
   `periodical` BINARY(1) NULL DEFAULT NULL,
-  `nextUpdate` TIMESTAMP NULL DEFAULT NULL,
+  `next_update` TIMESTAMP NULL DEFAULT NULL,
   `Title` VARCHAR(45) NOT NULL,
   `QueryID` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`timeOfSubmission`, `BusinessCustomer_email`),

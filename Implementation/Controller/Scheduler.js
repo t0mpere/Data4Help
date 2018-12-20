@@ -1,9 +1,9 @@
 const AnonRequest = require('../model/AnonymousRequest');
-const db = require('../database/Dbconnection').con;
+const db = require('../database/Dbconnection');
 
 
 function schedule() {
-    db.query('Select * from Queries where datediff(current_date ,next_update) >= 0 and closed = 0', (err,res)=>{
+    db.con.query('Select * from Queries where datediff(current_date ,next_update) >= 0 and closed = 0', (err,res)=>{
         if(res.length === 0){
 
         }else{

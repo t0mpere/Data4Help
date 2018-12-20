@@ -9,6 +9,6 @@ let con = mysql.createConnection({
 
 con.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
+    console.log("Connected to Data4Help's database!");
 });
 module.exports = {con:con};

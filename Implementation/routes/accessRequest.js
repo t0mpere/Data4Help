@@ -23,7 +23,7 @@ router.get('/makeRequest',(req,res) => {
 });
 router.post('/makeRequest',(req,res) =>{
     RequestServices.makePrivateRequest(req.user._email,req.body.email,(result) =>{
-        res.send({result:result});
+        res.render('privateRequestForm',{result:result});
     })
 });
 

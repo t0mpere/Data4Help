@@ -2,149 +2,163 @@ extends layout
 
 block content
     body.text-center
-        if auth
-            .row
-                .col-md-3
-                .col-md-6
-                    if result === undefined
-                        h2 Make a new anonymous Query
-                        hr
-                        div.form-group
-                            label(for='title') Title
-                                input#title.input-field(type='text', name='title', placeholder='Enter a title')
-                        div.form-group
-                            label(for='update') Update
-                                select#update
-                                    option(value='0') never
-                                    option(value='1') 1 per day
-                                    option(value='2') 1 per week
-                                    option(value='3') 1 per month
-                        div.form-group
-                            label(for='param') Data request:
-                                br
-                                label
-                                    input#avg_bp(type='checkbox')
-                                    | Average BP
-                                label
-                                    input#avg_bpm_min(type='checkbox')
-                                    | Average BPM Min
-                                br
-                                label
-                                    input#avg_bpm_max(type='checkbox')
-                                    | Average BPM Max
-                        div.form-group
-                            label(for='age') Age:
-                                br
-                                label(for='age') From:
-                                    input#age_from(type='number', name='age1', value='')
-                                label(for='age') To:
-                                    input#age_to(type='number', name='age2', value='')
-                        div.form-group
-                            label(for='date') Period:
-                                br
-                                label(for='date') From:
-                                    input#date_from(type='date', name='date1', placeholder='dd/mm/yyyy')
-                                label(for='date') To:
-                                    input#date_to(type='date', name='date2', placeholder='dd/mm/yyyy')
-                        script.
-                            function check(input) {
-                                let tmp ;
-                                if (!input)
-                                    tmp = document.getElementById('date_from').value;
-                                else
-                                    tmp = input;
+        #request-form
+            .container.jumbotron
+                .row
+                    .col-md-3
+                        .figure-caption.text-left
+                            h3.font-italic Please complete the following form to make an anonymous request
+                            h5.font-italic.font-weight-light Todo add description
+                    .col-md-8
+                        .container
+                            h2 Make a new anonymous Query
+                            hr
+                            div.form-signin
+                                    label(for='title') Title
+                                        input#title.form-control(type='text', name='title', placeholder='Enter a title')
 
-                                // First check for the pattern
-                                if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(tmp))
-                                    return false;
+                                    label(for='update') Update
+                                        select#update.form-control
+                                            option(value='0') never
+                                            option(value='1') 1 per day
+                                            option(value='2') 1 per week
+                                            option(value='3') 1 per month
+                                    div.form-check
+                                        label(for='avg_bp') Data request:
 
-                                // Parse the date parts to integers
-                                var parts = dateString.split("/");
-                                var day = parseInt(parts[0], 10);
-                                var month = parseInt(parts[1], 10);
-                                var year = parseInt(parts[2], 10);
+                                        input#avg_bp.form-control.form-check(type='checkbox')
+                                        |Average BP
+                                        input#avg_bpm_min.form-control.form-check(type='checkbox')
+                                        |Average BPM Min
+                                        input#avg_bpm_max.form-control.form-check(type='checkbox')
+                                        |Average BPM Max
 
-                                // Check the ranges of month and year
-                                if (year < 1000 || year > 3000 || month === 0 || month > 12)
-                                    tmp.setCustomValidity('Invalid date format!')
+                                    label(for='age_from') Age:
+                                        br
+                                        label(for='age_from') From:
+                                            input#age_from.form-control(type='number', name='age1', value='')
+                                        label(for='age_to') To:
+                                            input#age_to.form-control(type='number', name='age2', value='')
 
-                                var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                                    label(for='date') Period:
+                                        br
+                                        label(for='date_from') From:
+                                            input#date_from.form-control(type='date', name='date1', placeholder='dd/mm/yyyy')
+                                        label(for='date_to') To:
+                                            input#date_to.form-control(type='date', name='date2', placeholder='dd/mm/yyyy')
+                            script.
+                                $(document).ready(function() {  document.getElementById('result-form').style.display = 'none';});
+                                function check(input) {
+                                    let tmp ;
+                                    if (!input)
+                                        tmp = document.getElementById('date_from').value;
+                                    else
+                                        tmp = input;
 
-                                // Adjust for leap years
-                                if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
-                                    monthLength[1] = 29;
+                                    // First check for the pattern
+                                    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(tmp))
+                                        return false;
 
-                                // Check the range of the day
-                                if (!(day > 0 && day <= monthLength[month - 1]))
-                                    tmp.setCustomValidity('Invalid date format')
-                                }
-                        div.form-group
-                            label Choose the area:
-                            div#googleMap(style='width:100%;height:400px')
-                        script.
+                                    // Parse the date parts to integers
+                                    var parts = dateString.split("/");
+                                    var day = parseInt(parts[0], 10);
+                                    var month = parseInt(parts[1], 10);
+                                    var year = parseInt(parts[2], 10);
 
-                            var rectangle;
-                            function myMap() {
-                                var mapProp = {
-                                    center:new google.maps.LatLng(45.463620,9.188120),
-                                    zoom:11
-                                };
-                                var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+                                    // Check the ranges of month and year
+                                    if (year < 1000 || year > 3000 || month === 0 || month > 12)
+                                        tmp.setCustomValidity('Invalid date format!')
 
-                                var bounds = {
-                                    north: 45.5130838,
-                                    south: 45.420383,
-                                    east: 9.2755512,
-                                    west: 9.090843
-                                };
+                                    var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-                                // Define the rectangle and set its editable property to true.
-                                rectangle = new google.maps.Rectangle({
-                                    strokeColor: '#3492dd',
-                                    strokeOpacity: 0.7,
-                                    strokeWeight: 2,
-                                    fillColor: '#3492dd',
-                                    fillOpacity: 0.15,
-                                    bounds: bounds,
-                                    editable: true,
-                                    draggable: true
-                                });
+                                    // Adjust for leap years
+                                    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+                                        monthLength[1] = 29;
 
-                                rectangle.setMap(map);
-
-                                // Add an event listener on the rectangle.
-                                rectangle.addListener(map, 'bounds_changed');
-
-                                // Define an info window on the map.
-                                infoWindow = new google.maps.InfoWindow();
-                            }
-
-                            function submit(){
-                                check(document.getElementById('date_from').value);
-                                var u = document.getElementById('update');
-                                $.post('/bc/anonRequest/makeRequest', {
-                                    title : document.getElementById('title').value,
-                                    periodical : u.options[u.selectedIndex].value,
-                                    avg_bp : document.getElementById('avg_bp').checked,
-                                    avg_bpm_min : document.getElementById('avg_bpm_min').checked,
-                                    avg_bpm_max : document.getElementById('avg_bpm_max').checked,
-                                    age_from : document.getElementById('age_from').value,
-                                    age_to : document.getElementById('age_to').value,
-                                    date_from : document.getElementById('date_from').value,
-                                    date_to : document.getElementById('date_to').value,
-                                    lat_ne : rectangle.getBounds().getNorthEast().lat(),
-                                    long_ne : rectangle.getBounds().getNorthEast().lng(),
-                                    lat_sw : rectangle.getBounds().getSouthWest().lat(),
-                                    long_sw : rectangle.getBounds().getSouthWest().lng()
-                                }, function(data) {
-                                    document.getElementById('confirmed').innerText = data.result;
+                                    // Check the range of the day
+                                    if (!(day > 0 && day <= monthLength[month - 1]))
+                                        tmp.setCustomValidity('Invalid date format')
                                     }
-                                )
-                            }
-                        hr
-                        button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'submit()') Submit
-                        h1#confirmed
-                .col-md-3
+                            div.form-group
+                                label Choose the area:
+                                div#googleMap(style='width:100%;height:400px')
+                            script.
+
+                                var rectangle;
+                                function myMap() {
+                                    var mapProp = {
+                                        center:new google.maps.LatLng(45.463620,9.188120),
+                                        zoom:11
+                                    };
+                                    var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+                                    var bounds = {
+                                        north: 45.5130838,
+                                        south: 45.420383,
+                                        east: 9.2755512,
+                                        west: 9.090843
+                                    };
+
+                                    // Define the rectangle and set its editable property to true.
+                                    rectangle = new google.maps.Rectangle({
+                                        strokeColor: '#3492dd',
+                                        strokeOpacity: 0.7,
+                                        strokeWeight: 2,
+                                        fillColor: '#3492dd',
+                                        fillOpacity: 0.15,
+                                        bounds: bounds,
+                                        editable: true,
+                                        draggable: true
+                                    });
+
+                                    rectangle.setMap(map);
+
+                                    // Add an event listener on the rectangle.
+                                    rectangle.addListener(map, 'bounds_changed');
+
+                                    // Define an info window on the map.
+                                    infoWindow = new google.maps.InfoWindow();
+                                }
+
+                                function submit(){
+                                    check(document.getElementById('date_from').value);
+                                    var u = document.getElementById('update');
+                                    $.post('/bc/anonRequest/makeRequest', {
+                                        title : document.getElementById('title').value,
+                                        periodical : u.options[u.selectedIndex].value,
+                                        avg_bp : document.getElementById('avg_bp').checked,
+                                        avg_bpm_min : document.getElementById('avg_bpm_min').checked,
+                                        avg_bpm_max : document.getElementById('avg_bpm_max').checked,
+                                        age_from : document.getElementById('age_from').value,
+                                        age_to : document.getElementById('age_to').value,
+                                        date_from : document.getElementById('date_from').value,
+                                        date_to : document.getElementById('date_to').value,
+                                        lat_ne : rectangle.getBounds().getNorthEast().lat(),
+                                        long_ne : rectangle.getBounds().getNorthEast().lng(),
+                                        lat_sw : rectangle.getBounds().getSouthWest().lat(),
+                                        long_sw : rectangle.getBounds().getSouthWest().lng()
+                                    }, function(data) {
+                                        document.getElementById('result-form').style.display = '';
+                                        document.getElementById('request-form').style.display = 'none';
+
+                                        document.getElementById('res-message').innerText = data.result ? 'Success' : 'Something went wrong';
+                                        }
+                                    )
+                                }
+                            hr
+                            button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'submit()') Submit
+                    .col-md-1
+        #result-form
+            .container.jumbotron
+                body.text-center
+                    .row
+                        .col-md-4
+                        .col-md-4
+                            h3#res-message.font-weight-light.text-success
+                            .btn-group
+                                a.btn.btn-primary(href) Make another request
+                                a.btn(href = '/bc/anonRequest') Go back
+                        .col-md-4
 
 
 

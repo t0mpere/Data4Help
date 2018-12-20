@@ -1,0 +1,112 @@
+extends layout
+
+block content
+    body
+        if auth
+            script.
+                //load table
+                function loadTable(input){
+                    $.post( "/bc/anonRequest", { title:input.name }, function (data) {
+
+                        var html = '';
+                        for (var i = 0; i < data.res.length; i++){
+                            html += '<tr><td>' + data.res[i].avg_bpm +
+                                '</td><td>' + data.res[i].avg_bp_min + '</td>' +
+                                '</td><td>' + data.res[i].avg_bp_max + '</td>' +
+                                '</td><td>' + data.res[i].timestamp + '</td>' +
+                                '</tr>';
+                        }
+
+                        document.getElementById("result").innerHTML = html
+                        drawGraph(data);
+                    } );
+                }
+                function drawGraph(data) {
+                    //chart config
+                    $('#chart').remove(); // this is my <canvas> element
+                    $('#chart-container').append('<canvas id="chart"><canvas>');
+                    let ctx = document.getElementById("chart").getContext('2d');
+                    let myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.res.map(function (value) {
+                                return value.timestamp;
+                            }),
+                            datasets: [{
+                                    label: 'Avg Hearth Rate',
+                                borderColor: 'orange',
+                                    fill: false,
+                                    data: data.res.map(function (value, index) {
+                                        return value.avg_bpm;
+                                    }
+                                )},
+                                {
+                                    label: 'Avg Minimum Blood Pressure',
+                                    borderColor: 'blue',
+                                    fill: false,
+                                    data: data.res.map(function (value, index) {
+                                        return value.avg_bp_min;
+                                    })
+                                },
+                                {
+                                    label: 'Avg Maximum Blood Pressure',
+                                    borderColor: 'red',
+                                    fill: false,
+                                    data: data.res.map(function (value, index) {
+                                        return value.avg_bp_max;
+                                    })
+                                }]
+                        },
+                        options: {
+                            scales: {
+                                xAxes:[{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }],
+                                yAxes: [{
+
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+            .container-fluid
+                .row(style = 'padding: 20px')
+                    .col-md-8(style = 'padding: 20px').jumbotron
+                        #chart-container
+                            canvas#chart
+                        table.table.table-light
+                            thead
+                                tr
+                                    th
+                                        | Average Heath Rate
+                                    th
+                                        | Average Minimum Blood Pressure
+                                    th
+                                        | Average Maximum Blood Pressure
+                                    th
+                                        | Time of Calculation
+                            tbody#result.table-primary
+                    .col-md-4(style = 'padding: 20px;')
+                        h3.font-italic Anonymous Request:
+                        .list-group
+                            unless queries === undefined
+                                each val in queries
+                                    if !val.closed
+                                        a.list-group-item.active.font-italic.font-weight-bold(href='#', name = val.title, onclick = 'loadTable(this)')= val.title
+                                            span.badge.badge-success.badge-pill Active Next Update:#{val.next_update}
+                                    else
+                                        a.list-group-item.font-italic.font-weight-bold(href='#', role="button", name = val.title, onclick = 'loadTable(this)')= val.title
+                                            span.badge.badge-danger.badge-pill Closed
+                            else
+                                h5.font-weight-light.font-italic No anonymous requests yet.
+                        a.btn.btn-primary.btn-block.btn-lg.top-padding(href = '/bc/anonRequest/makeRequest')
+                            | Make New Request
+
+
+        else
+            h1 Login to use this function

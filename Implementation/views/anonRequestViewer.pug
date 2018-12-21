@@ -7,14 +7,22 @@ block content
                 //load table
                 function loadTable(input){
                     $.post( "/bc/anonRequest", { title:input.name }, function (data) {
-
+                        let nonAnon = 'Not enough data';
                         var html = '';
                         for (var i = 0; i < data.res.length; i++){
-                            html += '<tr><td>' + data.res[i].avg_bpm +
-                                '</td><td>' + data.res[i].avg_bp_min + '</td>' +
-                                '</td><td>' + data.res[i].avg_bp_max + '</td>' +
-                                '</td><td>' + data.res[i].timestamp + '</td>' +
-                                '</tr>';
+                            if(data.res[i].avg_bpm == 0){
+                                html += '<tr><td>' + nonAnon +
+                                    '</td><td>' + nonAnon + '</td>' +
+                                    '</td><td>' + nonAnon + '</td>' +
+                                    '</td><td>' + data.res[i].timestamp + '</td>' +
+                                    '</tr>';
+                            }else {
+                                html += '<tr><td>' + data.res[i].avg_bpm +
+                                    '</td><td>' + data.res[i].avg_bp_min + '</td>' +
+                                    '</td><td>' + data.res[i].avg_bp_min + '</td>' +
+                                    '</td><td>' + data.res[i].timestamp + '</td>' +
+                                    '</tr>';
+                            }
                         }
 
                         document.getElementById("result").innerHTML = html

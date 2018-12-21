@@ -4,6 +4,9 @@ const db = require('../database/Dbconnection');
 
 function schedule() {
     db.con.query('Select * from Queries where datediff(current_date ,next_update) >= 0 and closed = 0', (err,res)=>{
+        if(err) {
+            throw err;
+        }
         if(res.length === 0){
 
         }else{

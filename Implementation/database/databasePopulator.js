@@ -14,7 +14,7 @@ function randomDate(start, end) {
 //getCfs(500);
 //normal distribution rand generator
 function hearthRateGen() {
-    let max = 170;
+    let max = 100;
     let min = 30;
     return Math.floor((((((( Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random()) - 4)/4)+1)/2)*(max - min) ) + min);
 }
@@ -39,12 +39,12 @@ function generateUserData() {
     db.query("select email from PrivateCustomers where email like '%' order by email asc  ",(err,res)=>{
         if(err) throw err;
         for(let i = 0; i < res.length; i++){
-            for(let v = 0; v < 10;v++){
+            for(let v = 0; v < 5;v++){
                 let minBP = 1;
                 let maxBP = 0;
                 while (minBP >= maxBP){
-                    minBP = bloodPressureGen(20,100);
-                    maxBP = bloodPressureGen(60,140);
+                    minBP = bloodPressureGen(20,60);
+                    maxBP = bloodPressureGen(60,80);
                 }
                 let coord = coordGenerator();
                 let date = randomDate(new Date(2016,0,1),new Date());
@@ -62,12 +62,12 @@ function generateUserData() {
                         maxBP,
                         parseFloat(coord.lat),
                         parseFloat(coord.long),
-                        date,
                         date
                     ]
                 ];
-                db.query("insert into UserData values (?)",values,(err2,res2)=>{
-                    console.log(v + res[i].email);
+                db.query("insert into UserData(PrivateCustomers_email, hearthRate, minBloodPressure, maxBloodPressure, lat, `long`, timeOfAcquisition) values (?)",values,(err2,res2)=>{
+                    if(err2) throw err2;
+                    console.log(v + res[i].email + 'min: '+ minBP + ' max: '+ maxBP + ' hb: ' + values[0][1] + ' date: ' + date);
                 });
             }
         }

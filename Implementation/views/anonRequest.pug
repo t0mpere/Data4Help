@@ -18,20 +18,20 @@ block content
                                         input#title.form-control(type='text', name='title', placeholder='Enter a title')
 
                                     label(for='update') Update
-                                        select#update.form-control
+                                        select#update.form-control(onchange='change_date()')
                                             option(value='0') never
                                             option(value='1') 1 per day
                                             option(value='2') 1 per week
                                             option(value='3') 1 per month
                                     div.form-check
-                                        label(for='avg_bp') Data request:
+                                        label(for='avg_bpm') Data request:
 
-                                        input#avg_bp.form-control.form-check(type='checkbox')
-                                        |Average BP
-                                        input#avg_bpm_min.form-control.form-check(type='checkbox')
-                                        |Average BPM Min
-                                        input#avg_bpm_max.form-control.form-check(type='checkbox')
-                                        |Average BPM Max
+                                        input#avg_bpm.form-control.form-check(type='checkbox')
+                                        |Average BPM
+                                        input#avg_bp_min.form-control.form-check(type='checkbox')
+                                        |Average BP Min
+                                        input#avg_bp_max.form-control.form-check(type='checkbox')
+                                        |Average BP Max
 
                                     label(for='age_from') Age:
                                         br
@@ -40,34 +40,34 @@ block content
                                         label(for='age_to') To:
                                             input#age_to.form-control(type='number', name='age2', value='')
 
-                                    label(for='date') Period:
+                                    label(for='date_from') Period:
                                         br
                                         label(for='date_from') From:
                                             input#date_from.form-control(type='date', name='date1', placeholder='dd/mm/yyyy')
-                                        label(for='date_to') To:
+                                        label#date_to_label(for='date_to') To:
                                             input#date_to.form-control(type='date', name='date2', placeholder='dd/mm/yyyy')
+                            div.form-group
+                                label Choose the area:
+                                div#googleMap(style='width:100%;height:400px')
                             script.
-                                $(document).ready(function() {  document.getElementById('result-form').style.display = 'none';});
+                                $(document).ready(function () {
+                                    document.getElementById('result-form').style.display = 'none';
+                                });
                                 function check(input) {
-                                    let tmp ;
-                                    if (!input)
-                                        tmp = document.getElementById('date_from').value;
-                                    else
-                                        tmp = input;
 
                                     // First check for the pattern
-                                    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(tmp))
+                                    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(input))
                                         return false;
 
                                     // Parse the date parts to integers
-                                    var parts = dateString.split("/");
+                                    var parts = input.split("/");
                                     var day = parseInt(parts[0], 10);
                                     var month = parseInt(parts[1], 10);
                                     var year = parseInt(parts[2], 10);
 
                                     // Check the ranges of month and year
                                     if (year < 1000 || year > 3000 || month === 0 || month > 12)
-                                        tmp.setCustomValidity('Invalid date format!')
+                                        return false;
 
                                     var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -76,15 +76,11 @@ block content
                                         monthLength[1] = 29;
 
                                     // Check the range of the day
-                                    if (!(day > 0 && day <= monthLength[month - 1]))
-                                        tmp.setCustomValidity('Invalid date format')
-                                    }
-                            div.form-group
-                                label Choose the area:
-                                div#googleMap(style='width:100%;height:400px')
-                            script.
+                                    return day > 0 && day <= monthLength[month - 1];
+                                }
 
                                 var rectangle;
+
                                 function myMap() {
                                     var mapProp = {
                                         center:new google.maps.LatLng(45.463620,9.188120),
@@ -121,30 +117,68 @@ block content
                                 }
 
                                 function submit(){
-                                    check(document.getElementById('date_from').value);
-                                    var u = document.getElementById('update');
-                                    $.post('/bc/anonRequest/makeRequest', {
-                                        title : document.getElementById('title').value,
-                                        periodical : u.options[u.selectedIndex].value,
-                                        avg_bp : document.getElementById('avg_bp').checked,
-                                        avg_bpm_min : document.getElementById('avg_bpm_min').checked,
-                                        avg_bpm_max : document.getElementById('avg_bpm_max').checked,
-                                        age_from : document.getElementById('age_from').value,
-                                        age_to : document.getElementById('age_to').value,
-                                        date_from : document.getElementById('date_from').value,
-                                        date_to : document.getElementById('date_to').value,
-                                        lat_ne : rectangle.getBounds().getNorthEast().lat(),
-                                        long_ne : rectangle.getBounds().getNorthEast().lng(),
-                                        lat_sw : rectangle.getBounds().getSouthWest().lat(),
-                                        long_sw : rectangle.getBounds().getSouthWest().lng()
-                                    }, function(data) {
-                                        document.getElementById('result-form').style.display = '';
-                                        document.getElementById('request-form').style.display = 'none';
-
-                                        document.getElementById('res-message').innerText = data.result ? 'Success' : 'Something went wrong';
-                                        }
-                                    )
+                                    if(!check(document.getElementById('date_from').value))
+                                        alert('Invalid date format!');
+                                    else if(!check(document.getElementById('date_to').value))
+                                        alert('Invalid date format!');
+                                    else{
+                                        var u = document.getElementById('update');
+                                        $.post('/bc/anonRequest/makeRequest', {
+                                                title: document.getElementById('title').value,
+                                                periodical: u.options[u.selectedIndex].value,
+                                                avg_bpm: document.getElementById('avg_bpm').checked,
+                                                avg_bp_min: document.getElementById('avg_bp_min').checked,
+                                                avg_bp_max: document.getElementById('avg_bp_max').checked,
+                                                age_from: document.getElementById('age_from').value,
+                                                age_to: document.getElementById('age_to').value,
+                                                date_from: document.getElementById('date_from').value,
+                                                date_to: document.getElementById('date_to').value,
+                                                lat_ne: rectangle.getBounds().getNorthEast().lat(),
+                                                long_ne: rectangle.getBounds().getNorthEast().lng(),
+                                                lat_sw: rectangle.getBounds().getSouthWest().lat(),
+                                                long_sw: rectangle.getBounds().getSouthWest().lng()
+                                            }, function (data) {
+                                                document.getElementById('result-form').style.display = '';
+                                                document.getElementById('request-form').style.display = 'none';
+                                                document.getElementById('res-message').innerText = data.result ? 'Success' : 'Something went wrong';
+                                            }
+                                        )
+                                    }
                                 }
+
+                                function change_date() {
+                                    var u = document.getElementById('update');
+                                    if (u.options[u.selectedIndex].value === '0'){
+                                        document.getElementById('date_to').style.visibility = 'visible';
+                                        document.getElementById('date_to_label').style.visibility = 'visible';
+                                    }
+                                    else{
+                                        document.getElementById('date_to').style.visibility = 'hidden';
+                                        document.getElementById('date_to_label').style.visibility = 'hidden';
+                                    }
+                                }
+                                /*
+                                (function ($) {
+                                    $.fn.inputFilter = function (inputFilter) {
+                                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                                            if (inputFilter(this.value)) {
+                                                this.oldValue = this.value;
+                                                this.oldSelectionStart = this.selectionStart;
+                                                this.oldSelectionEnd = this.selectionEnd;
+                                            } else if (this.hasOwnProperty("oldValue")) {
+                                                this.value = this.oldValue;
+                                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                                            }
+                                        });
+                                    };
+                                }(jQuery));
+
+                                $("#age_from").inputFilter(function (value) {
+                                    return /^-?\d*$/.test(value);
+                                });
+                                $("#age_to").inputFilter(function (value) {
+                                    return /^-?\d*$/.test(value);
+                                });*/
                             hr
                             button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'submit()') Submit
                     .col-md-1

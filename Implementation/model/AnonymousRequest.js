@@ -25,23 +25,24 @@ class AnonymousRequest{
     }
 
     calculateNextUpdate(){
+        let today = new Date();
         switch (this.periodical){
             case 0:
                 this.closed = 1;
                 break;
             case 1:
-                this.next_update.setDate(this.next_update.getDate() + 1);
+                this.next_update.setDate(today.getDate() + 1);
                 break;
             case 2:
-                this.next_update.setDate(this.next_update.getDate() + 7);
+                this.next_update.setDate(today.getDate() + 7);
                 break;
             case 3:
-                this.next_update.setDate(this.next_update.getDate() + 30);
+                this.next_update.setDate(today.getDate() + 30);
                 break;
         }
     }
     updateNextUpdate(callback){
-        let sql = 'UPDATE Queries SET next_update = ? , closed = ? where BusinessCustomer_email = ? and id = ?'
+        let sql = 'UPDATE Queries SET next_update = ? , closed = ? where BusinessCustomer_email = ? and id = ?';
         db.con.query(sql,[[this.next_update],[this.closed],[this.BusinessCustomer_email],[this.id]],(err, res)=>{
             if(err){
                 callback(false);

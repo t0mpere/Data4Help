@@ -123,6 +123,7 @@ block content
                                         alert('Invalid date format!');
                                     else{
                                         var u = document.getElementById('update');
+
                                         $.post('/bc/anonRequest/makeRequest', {
                                                 title: document.getElementById('title').value,
                                                 periodical: u.options[u.selectedIndex].value,

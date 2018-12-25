@@ -34,7 +34,10 @@ class PrivateCustomer extends Customer{
     static getPrivateCustomerFromDb(email,callback){
         let sql = "SELECT * FROM PrivateCustomers WHERE email = ?";
         db.con.query(sql,email,function (err,res) {
-            if (err) callback(false);
+            if (err) {
+                callback(false);
+                throw err;
+            }
             else{
                 //converting date
                 if(res.length === 0) callback(false);
@@ -45,6 +48,7 @@ class PrivateCustomer extends Customer{
                         res[0]
                     );
                     callback(pc);
+                    console.log(pc);
                 }
             }
         })

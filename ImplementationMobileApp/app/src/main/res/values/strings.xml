@@ -11,4 +11,8 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="e_session_expired">Timeout</string>
+    <string name="code_404">404 Page not found!</string>
+    <string name="code_0">Error code 0</string>
+    <string name="server_response">success</string>
 </resources>

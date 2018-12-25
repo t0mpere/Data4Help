@@ -37,6 +37,14 @@ function registerPrivateCustomer(args,callback) {
     new PrivateCustomer(args).commitToDb(callback);
 
 }
+function authPrivateCustomer(email,password,callback) {
+    PrivateCustomer.getPrivateCustomerFromDb(email,(res)=>{
+        if(res !== false){
+            if(res._password === password) callback(true);
+            else callback(false);
+        }else callback(false);
+    })
+}
 /*
  * checks if exist any private/business customer with given email
  *
@@ -107,6 +115,7 @@ function setBusinessCustomerDenied(email,callback){
      registerBusinessCustomer:registerBusinessCustomer,
      getPendingBusinessCustomers:getPendingBusinessCustomers,
      setBusinessCustomerActive:setBusinessCustomerActive,
-     setBusinessCustomerDenyed:setBusinessCustomerDenied
+     setBusinessCustomerDenyed:setBusinessCustomerDenied,
+     authPrivateCustomer:authPrivateCustomer
 
  };

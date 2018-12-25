@@ -21,6 +21,7 @@ let registrationRouter = require('./routes/registration');
 let requestAccessRouter = require('./routes/accessRequest');
 let anonRequestRouter = require('./routes/anonRequest');
 let systemManagerRouter = require('./routes/systemManager');
+const PrivateCustomer = require("./model/PrivateCustomer");
 
 var webApp = express();
 

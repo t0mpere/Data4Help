@@ -1,11 +1,18 @@
 extends layout
 
 block content
-    .jumbotron.text-center
-        h1 Data4Help
-        p #{title}
+    .jumbotron.text-center.background-mod
+        img(src="../img/logo.png", alt='Data4help')
+        h1(style="color: #5FAEAE;") Welcome!
         if auth || isSystemManager
-            #welcome Welcome:
-            h4 #{user}
+            h2 #{user}
             if isSystemManager
                 h1 You are logged in as a System Manager
+            else
+                .btn-group(style="padding-top:3%;")
+                    a.btn.btn-primary.btn-lg.button-mod(href='/bc/accessRequest') Private requests
+                    a.btn.btn-primary.btn-lg.button-mod(href='/bc/anonRequest') Anonymous queries
+        else
+            .btn-group
+                a.btn.btn-primary.btn-lg.button-mod(href='/login') Login
+                a.btn.btn-primary.btn-lg.button-mod(href='/bc/register') Register

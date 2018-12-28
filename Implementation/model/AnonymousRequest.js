@@ -17,9 +17,6 @@ class AnonymousRequest{
         this.long_sw = args.long_sw;
         this.age_from = args.age_from;
         this.age_to = args.age_to;
-        this.avg_bp_max = args.avg_bp_max === 'true' ? 1 : 0;
-        this.avg_bp_min = args.avg_bp_min === 'true' ? 1 : 0;
-        this.avg_bpm = args.avg_bpm === 'true' ? 1 : 0;
         this.id = args.id;
         this.next_update = (args.next_update !== undefined) ? args.next_update : new Date();
     }
@@ -53,7 +50,7 @@ class AnonymousRequest{
 
 
     commitToDb(callback){
-        let sql = "INSERT INTO Queries(BusinessCustomer_email,title,periodical,closed,date_from,date_to,lat_ne,long_ne,lat_sw,long_sw,age_from,age_to,avg_bp_max,avg_bp_min,avg_bpm,next_update) VALUES (?)";
+        let sql = "INSERT INTO Queries(BusinessCustomer_email,title,periodical,closed,date_from,date_to,lat_ne,long_ne,lat_sw,long_sw,age_from,age_to,next_update) VALUES (?)";
         let values = [
             [
                 this.BusinessCustomer_email,
@@ -68,9 +65,6 @@ class AnonymousRequest{
                 this.long_sw,
                 this.age_from,
                 this.age_to,
-                this.avg_bp_max,
-                this.avg_bp_min,
-                this.avg_bpm,
                 this.next_update
             ]
         ];

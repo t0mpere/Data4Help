@@ -13,17 +13,17 @@ block content
                         .col-md-4
                             if result !== true
                                 form.form-signin(action='/bc/accessRequest/makeRequest', method='post')
-                                    .font-italic.left-padding.text-left Private Customer's email
+                                    h4.left-padding.text-left(style ="color:#77bbbb;") Private Customer's email
                                     label.sr-only.def-padding(for='email') Private Customer's email
                                     input#password.form-control.def-padding(type='email', name='email', placeholder='Insert email', required='')
-                                    button.btn.btn-lg.btn-primary.btn-block.def-padding(type='submit') Submit
+                                    button.btn.btn-lg.btn-primary.btn-block.def-padding.button-mod(type='submit') Submit
                                 if result === false
-                                    h3.font-weight-light.text-danger The inserted email is not valid
+                                    h4.font-weight-light.text-danger The inserted email is not valid
                             else
-                                h3.font-weight-light.text-success Request Sent
+                                h4.font-weight-light.text-success Request Sent
                                 .btn-group
-                                    a.btn.btn-primary(href) Make another request
-                                    a.btn(href = '/bc/accessRequest') Go back
+                                    a.btn.btn-primary.button-mod(href) Make another request
+                                    a.btn.button-mod(href = '/bc/accessRequest') Go back
                         .col-md-4
         else
             p

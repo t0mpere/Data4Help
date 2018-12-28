@@ -2,13 +2,15 @@ doctype html
 html
   head
     title #{title}
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet' href='/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
     link(href='/stylesheets/sidebar.css', rel='stylesheet')
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css")
     script(src='/bootstrap/dist/js/bootstrap.js')
     script(src='//code.jquery.com/jquery-1.11.1.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js')
     script(defer='', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC3GU5egg_9ztBELEclTXUJmyzNz_Dk3lg&callback=myMap')
+    script(src="https://cdn.jsdelivr.net/npm/flatpickr")
 
 
 
@@ -19,7 +21,7 @@ html
       ul.sidebar-nav
           p
           li.sidebar-brand
-              h2 Menu:
+              h2 Menu
           if auth
               li
                   a(href='/') Home Page

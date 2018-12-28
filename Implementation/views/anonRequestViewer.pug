@@ -26,8 +26,9 @@ block content
                         }
 
                         document.getElementById("result").innerHTML = html
+                        changeName(input.name);
                         drawGraph(data);
-                    } );
+                    });
                 }
                 function drawGraph(data) {
                     //chart config
@@ -42,7 +43,7 @@ block content
                             }),
                             datasets: [{
                                     label: 'Avg Hearth Rate',
-                                borderColor: 'orange',
+                                    borderColor: 'rgba(154, 203, 203, 0.6)',
                                     fill: false,
                                     data: data.res.map(function (value, index) {
                                         return value.avg_bpm;
@@ -50,7 +51,7 @@ block content
                                 )},
                                 {
                                     label: 'Avg Minimum Blood Pressure',
-                                    borderColor: 'blue',
+                                    borderColor: 'rgba(85, 170, 170, 0.8)',
                                     fill: false,
                                     data: data.res.map(function (value, index) {
                                         return value.avg_bp_min;
@@ -58,7 +59,7 @@ block content
                                 },
                                 {
                                     label: 'Avg Maximum Blood Pressure',
-                                    borderColor: 'red',
+                                    borderColor: 'rgba(43, 85, 85, 1)',
                                     fill: false,
                                     data: data.res.map(function (value, index) {
                                         return value.avg_bp_max;
@@ -81,13 +82,58 @@ block content
                             }
                         }
                     });
+                    document.getElementById('tbl').style.visibility = 'visible';
                 }
+
+                function changeName(title) {
+                    document.getElementById('title').innerHTML = "<h2>" + title + "</\h2>";
+                }
+
+                $(document).ready(function () {
+                    $('#chart-container').append('<canvas id="chart"><canvas>');
+                    let ctx = document.getElementById("chart").getContext('2d');
+                    let myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            datasets: [{
+                                    label: 'Avg Hearth Rate',
+                                    borderColor: 'rgba(154, 203, 203, 0.6)'
+                                },
+                                {
+                                    label: 'Avg Minimum Blood Pressure',
+                                    borderColor: 'rgba(85, 170, 170, 0.8)'
+                                },
+                                {
+                                    label: 'Avg Maximum Blood Pressure',
+                                    borderColor: 'rgba(43, 85, 85, 1)'
+                                }]
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    stacked: true,
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }],
+                                yAxes: [{
+
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                    document.getElementById('tbl').style.visibility = 'hidden';
+                });
+
             .container-fluid
-                .row(style = 'padding: 20px')
-                    .col-md-8(style = 'padding: 20px').jumbotron
+                .row
+                    .col-md-9.jumbotron(style='background-color: transparent')
+                        h2.text-center#title(style='color: #77bbbb; padding-bottom:4%;') Choose a request
                         #chart-container
-                            canvas#chart
-                        table.table.table-light
+                        table.table.table-light.table-responsive#tbl(style ="padding-top:5%; color : #77bbbb;")
                             thead
                                 tr
                                     th
@@ -98,23 +144,24 @@ block content
                                         | Average Maximum Blood Pressure
                                     th
                                         | Time of Calculation
-                            tbody#result.table-primary
-                    .col-md-4(style = 'padding: 20px;')
-                        h3.font-italic Anonymous Request:
+                            tbody#result.table-primary(style="background-color:transparent; font-size:14px;")
+                    .col-md-3(style = 'padding: 20px; background-color:#ededed;')
+                        h3.text-center(style ="color:#77bbbb; padding-bottom:5%;") Anonymous Request:
                         .list-group
                             unless queries === undefined
                                 each val in queries
                                     if !val.closed
-                                        a.list-group-item.active.font-italic.font-weight-bold(href='#', name = val.title, onclick = 'loadTable(this)')= val.title
-                                            span.badge.badge-success.badge-pill Active Next Update:#{val.next_update}
+                                        a#req_acc.list-group-item.active.font-italic.font-weight-bold(href='#', name = val.title, onclick = 'loadTable(this)')= val.title
+                                            hr
+                                            span Next Update:#{val.next_update}
+                                            span.badge.badge-success.badge-pill Active
                                     else
-                                        a.list-group-item.font-italic.font-weight-bold(href='#', role="button", name = val.title, onclick = 'loadTable(this)')= val.title
+                                        a#req_ref.list-group-item.font-italic.font-weight-bold(href='#', role="button", name = val.title, onclick = 'loadTable(this)')= val.title
                                             span.badge.badge-danger.badge-pill Closed
                             else
-                                h5.font-weight-light.font-italic No anonymous requests yet.
-                        a.btn.btn-primary.btn-block.btn-lg.top-padding(href = '/bc/anonRequest/makeRequest')
+                                h4(style ="color:#77bbbb;") No anonymous requests yet.
+                        a.btn.btn-primary.btn-block.btn-lg.top-padding.button-mod(href = '/bc/anonRequest/makeRequest')
                             | Make New Request
-
 
         else
             h1 Login to use this function

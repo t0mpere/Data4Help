@@ -2,7 +2,7 @@ extends layout
 
 block content
     body.text-center
-        .jumbotron
+        .jumbotron.background-mod
             .row
                 .col-md-12
                     .error-template
@@ -16,5 +16,5 @@ block content
                             | Please Login to use this function
                         |
                         .error-actions
-                            a.btn.btn-primary.btn-lg(href='/') Home Page
-                            a.btn.btn-default.btn-lg(href='/login') Login / Register
+                            a.btn.btn-primary.btn-lg.button-mod(href='/') Home Page
+                            a.btn.btn-primary.btn-lg.button-mod(href='/login') Login / Register

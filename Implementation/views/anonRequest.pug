@@ -3,7 +3,7 @@ extends layout
 block content
     body.text-center
         #request-form
-            .container.jumbotron
+            .container.jumbotron.background-mod
                 .row
                     .col-md-3
                         .figure-caption.text-left
@@ -23,47 +23,105 @@ block content
                                             option(value='1') 1 per day
                                             option(value='2') 1 per week
                                             option(value='3') 1 per month
-                                    div.form-check
-                                        label(for='avg_bpm') Data request:
 
-                                        input#avg_bpm.form-control.form-check(type='checkbox')
-                                        |Average BPM
-                                        input#avg_bp_min.form-control.form-check(type='checkbox')
-                                        |Average BP Min
-                                        input#avg_bp_max.form-control.form-check(type='checkbox')
-                                        |Average BP Max
-
-                                    label(for='age_from') Age:
+                                    label(for='age_from') Age
                                         br
                                         label(for='age_from') From:
                                             input#age_from.form-control(type='number', name='age1', value='')
                                         label(for='age_to') To:
                                             input#age_to.form-control(type='number', name='age2', value='')
 
-                                    label(for='date_from') Period:
+                                    label(for='date_from') Period
                                         br
                                         label(for='date_from') From:
-                                            input#date_from.form-control(type='date', name='date1', placeholder='dd/mm/yyyy')
+                                            input#date_from.form-control(type='date', name='date1', placeholder='yyyy-mm-dd', style="background-color:white;")
                                         label#date_to_label(for='date_to') To:
-                                            input#date_to.form-control(type='date', name='date2', placeholder='dd/mm/yyyy')
+                                            input#date_to.form-control(type='date', name='date2', placeholder='yyyy-mm-dd', style="background-color:white;")
                             div.form-group
                                 label Choose the area:
                                 div#googleMap(style='width:100%;height:400px')
                             script.
                                 $(document).ready(function () {
                                     document.getElementById('result-form').style.display = 'none';
+                                    $(document.getElementById('date_from')).flatpickr();
+                                    $(document.getElementById('date_to')).flatpickr();
                                 });
+                                $(document.getElementById('age_from')).on('keypress', function (e) {
+                                    return e.metaKey || // cmd/ctrl
+                                        e.which <= 0 || // arrow keys
+                                        e.which === 8 || // delete key
+                                        /[0-9]/.test(String.fromCharCode(e.which)); // numbers
+                                })
+                                $(document.getElementById('age_to')).on('keypress', function (e) {
+                                    return e.metaKey || // cmd/ctrl
+                                        e.which <= 0 || // arrow keys
+                                        e.which === 8 || // delete key
+                                        /[0-9]/.test(String.fromCharCode(e.which)); // numbers
+                                })
+
+                                var ALERT_TITLE = "Oops!";
+                                var ALERT_BUTTON_TEXT = "Ok";
+
+                                if (document.getElementById) {
+                                    window.alert = function (txt) {
+                                        createCustomAlert(txt);
+                                    }
+                                }
+
+                                function createCustomAlert(txt) {
+                                    d = document;
+
+                                    if (d.getElementById("modalContainer")) return;
+
+                                    mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+                                    mObj.id = "modalContainer";
+                                    mObj.style.height = d.documentElement.scrollHeight + "px";
+
+                                    alertObj = mObj.appendChild(d.createElement("div"));
+                                    alertObj.id = "alertBox";
+                                    if (d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+                                    alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth) / 2 + "px";
+                                    alertObj.style.visiblity = "visible";
+
+                                    h1 = alertObj.appendChild(d.createElement("h1"));
+                                    h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+                                    msg = alertObj.appendChild(d.createElement("p"));
+                                    //msg.appendChild(d.createTextNode(txt));
+                                    msg.innerHTML = txt;
+
+                                    btn = alertObj.appendChild(d.createElement("a"));
+                                    btn.id = "closeBtn";
+                                    btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+                                    btn.href = "#";
+                                    btn.focus();
+                                    btn.onclick = function () {
+                                        removeCustomAlert();
+                                        return false;
+                                    }
+
+                                    alertObj.style.display = "block";
+
+                                }
+
+                                function removeCustomAlert() {
+                                    document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+                                }
+                                function ful() {
+                                    alert('Alert this pages');
+                                }
+
                                 function check(input) {
 
                                     // First check for the pattern
-                                    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(input))
+                                    if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(input))
                                         return false;
 
                                     // Parse the date parts to integers
-                                    var parts = input.split("/");
-                                    var day = parseInt(parts[0], 10);
+                                    var parts = input.split("-");
+                                    var year = parseInt(parts[0], 10);
                                     var month = parseInt(parts[1], 10);
-                                    var year = parseInt(parts[2], 10);
+                                    var day = parseInt(parts[2], 10);
 
                                     // Check the ranges of month and year
                                     if (year < 1000 || year > 3000 || month === 0 || month > 12)
@@ -117,9 +175,9 @@ block content
                                 }
 
                                 function submit(){
-                                    if(!check(document.getElementById('date_from').value))
-                                        alert('Invalid date format!');
-                                    else if(!check(document.getElementById('date_to').value))
+                                    if(!check(document.getElementById('date_from').value) ||
+                                        (document.getElementById('date_to').style.visibility !== 'hidden' &&
+                                            !check(document.getElementById('date_to').value)))
                                         alert('Invalid date format!');
                                     else{
                                         var u = document.getElementById('update');
@@ -127,9 +185,6 @@ block content
                                         $.post('/bc/anonRequest/makeRequest', {
                                                 title: document.getElementById('title').value,
                                                 periodical: u.options[u.selectedIndex].value,
-                                                avg_bpm: document.getElementById('avg_bpm').checked,
-                                                avg_bp_min: document.getElementById('avg_bp_min').checked,
-                                                avg_bp_max: document.getElementById('avg_bp_max').checked,
                                                 age_from: document.getElementById('age_from').value,
                                                 age_to: document.getElementById('age_to').value,
                                                 date_from: document.getElementById('date_from').value,
@@ -141,7 +196,16 @@ block content
                                             }, function (data) {
                                                 document.getElementById('result-form').style.display = '';
                                                 document.getElementById('request-form').style.display = 'none';
-                                                document.getElementById('res-message').innerText = data.result ? 'Success' : 'Something went wrong';
+                                                if(data.result){
+                                                    document.getElementById('res-message').innerText = 'Success';
+                                                    text = document.getElementById('res-message');
+                                                    text.classList.add("text-success");
+                                                }
+                                                else{
+                                                    document.getElementById('res-message').innerText = 'Something went wrong';
+                                                    text = document.getElementById('res-message');
+                                                    text.classList.add("text-danger");
+                                                }
                                             }
                                         )
                                     }
@@ -158,41 +222,20 @@ block content
                                         document.getElementById('date_to_label').style.visibility = 'hidden';
                                     }
                                 }
-                                /*
-                                (function ($) {
-                                    $.fn.inputFilter = function (inputFilter) {
-                                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
-                                            if (inputFilter(this.value)) {
-                                                this.oldValue = this.value;
-                                                this.oldSelectionStart = this.selectionStart;
-                                                this.oldSelectionEnd = this.selectionEnd;
-                                            } else if (this.hasOwnProperty("oldValue")) {
-                                                this.value = this.oldValue;
-                                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                            }
-                                        });
-                                    };
-                                }(jQuery));
 
-                                $("#age_from").inputFilter(function (value) {
-                                    return /^-?\d*$/.test(value);
-                                });
-                                $("#age_to").inputFilter(function (value) {
-                                    return /^-?\d*$/.test(value);
-                                });*/
                             hr
-                            button.btn.btn-lg.btn-primary.btn-block(type='submit', onclick = 'submit()') Submit
+                            button.btn.btn-lg.btn-primary.btn-block.button-mod(type='submit', onclick='submit()') Submit
                     .col-md-1
         #result-form
-            .container.jumbotron
+            .container.jumbotron.background-mod
                 body.text-center
                     .row
                         .col-md-4
                         .col-md-4
-                            h3#res-message.font-weight-light.text-success
+                            h3#res-message.font-weight-light
                             .btn-group
-                                a.btn.btn-primary(href) Make another request
-                                a.btn(href = '/bc/anonRequest') Go back
+                                a.btn.btn-primary.button-mod(href) Make another request
+                                a.btn.btn-primary.button-mod(href = '/bc/anonRequest') Go back
                         .col-md-4
 
 

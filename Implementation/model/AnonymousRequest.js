@@ -1,4 +1,4 @@
-const db = require('../database/Dbconnection');
+const db = require('../database/DbConnection');
 const mailServer = require('../Controller/MailServer').mailServer;
 
 class AnonymousRequest{

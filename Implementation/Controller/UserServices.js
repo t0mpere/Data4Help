@@ -116,6 +116,7 @@ function setBusinessCustomerDenied(email,callback){
      getPendingBusinessCustomers:getPendingBusinessCustomers,
      setBusinessCustomerActive:setBusinessCustomerActive,
      setBusinessCustomerDenyed:setBusinessCustomerDenied,
-     authPrivateCustomer:authPrivateCustomer
+     authPrivateCustomer:authPrivateCustomer,
+     getPersonalData:getPersonalData
 
  };

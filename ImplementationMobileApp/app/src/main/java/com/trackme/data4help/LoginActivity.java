@@ -2,6 +2,8 @@ package com.trackme.data4help;
 
 import HttpClient.AuthToken;
 import HttpClient.Data4HelpAsyncClient;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,9 +14,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.loopj.android.http.AsyncHttpClient;
+import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,16 +27,17 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private EditText mPasswordView;
+    private EditText passwordTextField;
+    private EditText emailTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        emailTextField = findViewById(R.id.emailField);
+        passwordTextField = (EditText) findViewById(R.id.passwordField);
+        passwordTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -45,9 +47,8 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button logInButton = (Button) findViewById(R.id.buttonLogIn);
+        logInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -57,24 +58,49 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        AuthToken.createToken("cami.231298@gmail.com","passuord");
-        Data4HelpAsyncClient.post("/login/pc", null, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        String email = emailTextField.getText().toString();
+        String password = passwordTextField.getText().toString();
+        final Toast toast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
-                Log.v("Success",response.toString());
-            }
+        if(email.isEmpty() || password.isEmpty()){
+            toast.setText("Insert email and password");
+            toast.show();
+        }else {
+            AuthToken.createToken(email,password);
+            final Context thisContext = this;
+            Data4HelpAsyncClient.post("/api/login", null, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                try {
-                    throw throwable;
-                } catch (Throwable throwable1) {
-                    throwable1.printStackTrace();
+                    Log.v("Success", response.toString());
+                    try {
+                        if(response.getBoolean("auth")){
+                            toast.setText("Success");
+                            toast.show();
+                            startActivity(new Intent(thisContext,MainActivity.class));
+                        }else {
+                            AuthToken.deleteToken();
+                            toast.setText("Login failed");
+                            toast.show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Log.v("ERROR >> ",responseString + "\nCode: " + String.valueOf(statusCode));
-            }
-        });
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    try {
+                        throw throwable;
+                    } catch (Throwable throwable1) {
+                        throwable1.printStackTrace();
+                    }
+                    toast.setText("Network Error");
+                    toast.show();
+                    Log.v("ERROR >> ", responseString + "\nCode: " + String.valueOf(statusCode));
+                }
+            });
+        }
 
     }
 

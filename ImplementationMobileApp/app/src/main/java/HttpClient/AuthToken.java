@@ -16,6 +16,9 @@ public class AuthToken extends JSONObject {
     public static AuthToken getToken(){
         return token;
     }
+    public static void deleteToken(){
+        token = null;
+    }
     public static void createToken(String email,String password){
         token = new AuthToken(email,password);
     }

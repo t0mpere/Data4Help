@@ -21,7 +21,7 @@ let registrationRouter = require('./routes/registration');
 let requestAccessRouter = require('./routes/accessRequest');
 let anonRequestRouter = require('./routes/anonRequest');
 let systemManagerRouter = require('./routes/systemManager');
-const PrivateCustomer = require("./model/PrivateCustomer");
+let mobileRestApis = require('./routes/mobileRestApis');
 
 var webApp = express();
 
@@ -104,6 +104,7 @@ webApp.use('/bc/register',registrationRouter);
 webApp.use('/bc/accessRequest',requestAccessRouter);
 webApp.use('/bc/anonRequest',anonRequestRouter);
 webApp.use('/sm/',systemManagerRouter);
+webApp.use('/api/',mobileRestApis);
 
 
 // catch 404 and forward to error handler

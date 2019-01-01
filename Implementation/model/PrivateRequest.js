@@ -60,6 +60,9 @@ class PrivateRequest {
             } else callback(false);
         })
     }
+    setAcceptedStatus(val,callback){
+
+    }
 
     static getPrivateRequestsByPC(PCEmail, callback) {
         let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ?";
@@ -93,3 +96,6 @@ class PrivateRequest {
 }
 
 module.exports = PrivateRequest;
+PrivateRequest.getPrivateRequestsByPC("cami.231298@gmail.com",(res)=>{
+   console.log(JSON.stringify(res));
+});

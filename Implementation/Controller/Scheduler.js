@@ -1,5 +1,5 @@
 const AnonRequest = require('../model/AnonymousRequest');
-const db = require('../database/Dbconnection');
+const db = require('../database/DbConnection');
 
 
 function schedule() {

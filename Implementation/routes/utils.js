@@ -1,6 +1,6 @@
 function isBusinessCustomer(req) {
     if(req.isAuthenticated()){
-        if(req.user._partitaIva !== undefined) return true;
+        return req.user._partitaIva !== undefined;
     }else return false;
 }
 function isSystemManager(req) {

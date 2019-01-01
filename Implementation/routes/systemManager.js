@@ -7,7 +7,10 @@ const Utils = require('../routes/utils');
 router.use(function(req, res, next) {
     if(Utils.isSystemManager(req))
         next();
-    else res.render('deniedAccess')
+    else {
+        res.status(401);
+        res.render('deniedAccess');
+    }
 });
 
 router.get('/pendingRequests/',(req,res) => {

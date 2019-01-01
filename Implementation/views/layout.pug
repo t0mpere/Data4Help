@@ -6,6 +6,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(href='/stylesheets/sidebar.css', rel='stylesheet')
     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous")
+    link(rel="shortcut icon" href="")
     script(src='/bootstrap/dist/js/bootstrap.js')
     script(src='//code.jquery.com/jquery-1.11.1.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js')
@@ -21,29 +23,44 @@ html
       ul.sidebar-nav
           p
           li.sidebar-brand
-              h2 Menu
+              h2.text-left Menu
           if auth
               li
-                  a(href='/') Home Page
+                  a.text-left(href='/')
+                    i.fas.fa-home.pr-3
+                    | Home Page
               li
-                  a(href='#') Dashboard
+                  a.text-left(href='#')
+                    i.fas.fa-th-large.pr-3
+                    | Dashboard
               li
-                  a(href='/bc/accessRequest') Private Requests
+                  a.text-left(href='/bc/accessRequest')
+                    i.fas.fa-user.pr-3
+                    | Private Requests
               li
-                  a(href='/bc/anonRequest') Anonymous queries
+                  a.text-left(href='/bc/anonRequest')
+                    i.fas.fa-list-ul.pr-3
+                    | Anonymous queries
               li
-                  a(href='/bc/logout') Logout
+                  a.text-left(href='/bc/logout')
+                    i.fas.fa-sign-out-alt.pr-3
+                    | Logout
           else if isSystemManager
               li
                   a(href='/sm/pendingRequests') Pending Requests
               li
-                  a(href='/bc/logout') Logout
+                  a.text-left(href='/bc/logout')
+                      i.fas.fa-sign-out-alt.pr-3
+                      | Logout
           else
               li
-                  a(href='/')
+                  a.text-left(href='/')
+                    i.fas.fa-home.pr-3
                     | Home Page
               li
-                  a(href='/login') Login / Register
+                  a.text-left(href='/login')
+                    i.fas.fa-sign-in-alt.pr-3
+                    | Login / Register
 
   // /#sidebar-wrapper
   // Page Content

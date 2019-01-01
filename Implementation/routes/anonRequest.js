@@ -7,7 +7,10 @@ const RequestServices = require('../Controller/RequestServices');
 router.use(function(req, res, next) {
     if(Utils.isBusinessCustomer(req))
         next();
-    else res.render('deniedAccess')
+    else {
+        res.status(401);
+        res.render('deniedAccess');
+    }
 });
 
 router.get('/makeRequest',(req,res) => {

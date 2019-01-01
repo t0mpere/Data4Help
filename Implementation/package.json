@@ -30,7 +30,10 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "chai": "latest",
+    "chai-http": "^4.2.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "supertest": "^3.3.0"
   }
 }

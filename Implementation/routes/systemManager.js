@@ -22,7 +22,7 @@ router.post('/pendingRequests/',(req,res) => {
     if (req.body.accepted === 'true'){
         UserServices.setBusinessCustomerActive(req.body.email,(result) =>{})
     } else{
-        UserServices.setBusinessCustomerDenyed(req.body.email,(result) =>{})
+        UserServices.setBusinessCustomerDenied(req.body.email,(result) =>{})
     }
     res.send('');
 });

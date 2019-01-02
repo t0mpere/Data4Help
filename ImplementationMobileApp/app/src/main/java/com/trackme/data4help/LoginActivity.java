@@ -2,6 +2,7 @@ package com.trackme.data4help;
 
 import HttpClient.AuthToken;
 import HttpClient.Data4HelpAsyncClient;
+import HttpClient.Data4HelpJsonResponseHandler;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -66,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
             toast.setText("Insert email and password");
             toast.show();
         }else {
-            AuthToken.createToken(email,password);
-            final Context thisContext = this;
-            Data4HelpAsyncClient.post("/api/login", null, new JsonHttpResponseHandler() {
+            //AuthToken.createToken(email,password);
+            AuthToken.createToken("cami.231298@gmail.com","passuord");
+            Data4HelpAsyncClient.post("/api/login", null, new Data4HelpJsonResponseHandler(this) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
@@ -77,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                         if(response.getBoolean("auth")){
                             toast.setText("Success");
                             toast.show();
-                            startActivity(new Intent(thisContext,MainActivity.class));
+                            startActivity(new Intent(getContext(),MainActivity.class));
                         }else {
                             AuthToken.deleteToken();
                             toast.setText("Login failed");
@@ -86,18 +87,6 @@ public class LoginActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    try {
-                        throw throwable;
-                    } catch (Throwable throwable1) {
-                        throwable1.printStackTrace();
-                    }
-                    toast.setText("Network Error");
-                    toast.show();
-                    Log.v("ERROR >> ", responseString + "\nCode: " + String.valueOf(statusCode));
                 }
             });
         }

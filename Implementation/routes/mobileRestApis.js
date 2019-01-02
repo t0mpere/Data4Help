@@ -30,6 +30,47 @@ router.post('/userdata',(req, res) => {
                 res.end(JSON.stringify(JSONResp));
             })
 
+        }else {
+            res.writeHead(404, {"Content-Type": "application/json"});
+            res.send();
+        }
+    });
+
+
+});
+
+router.post('/access_requests',(req, res) => {
+    UserServices.authPrivateCustomer(req.body.email,req.body.password,(authResult) =>{
+        if(authResult) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            UserServices.getPrivateRequests(req.body.email,(response) => {
+                let JSONResp = {};
+                res.end(JSON.stringify(JSONResp));
+            })
+
+        }else {
+            res.writeHead(404, {"Content-Type": "application/json"});
+            res.send();
+        }
+    });
+
+
+});
+router.post('/access_requests/set_status',(req, res) => {
+    UserServices.authPrivateCustomer(req.body.email,req.body.password,(authResult) =>{
+        if(authResult) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            console.log(req.body);
+            UserServices.setPrivateRequestStatus(req.body.email,req.body.BCEmail,req.body.val,(result) =>{
+                UserServices.getPrivateRequests(req.body.email,(response) => {
+                    let JSONResp = response;
+                    res.end(JSON.stringify(JSONResp));
+                });
+            })
+
+        }else {
+            res.writeHead(404, {"Content-Type": "application/json"});
+            res.send();
         }
     });
 

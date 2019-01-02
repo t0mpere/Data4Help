@@ -53,19 +53,32 @@ class PrivateRequest {
     static getPrivateRequest(PCEmail, BCEmail, callback) {
         let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ? and BusinessCustomers_email = ?";
         db.con.query(sql, [[PCEmail], [BCEmail]], (err, res) => {
-            if (err) throw err;
+            if (err) {
+                callback(false)
+                throw err;
+            }
             if (res.length) {
                 let tuple = res[0];
                 callback(new PrivateRequest(tuple));
             } else callback(false);
         })
     }
-    setAcceptedStatus(val,callback){
+    static setAcceptedStatus(BCEmail,PCEmail,val,callback){
+        let sql = "UPDATE PrivateRequest  SET accepted = ?  WHERE BusinessCustomers_email = ? and PrivateCustomers_email = ?;"
+        db.con.query(sql,[[val],[BCEmail],[PCEmail]],(err,res)=>{
+            if(err) {
+                callback(false);
+                throw err;
+            }
+            if(res.affectedRows === 0){
+                callback(false);
+            }else callback(true);
+        })
 
     }
 
     static getPrivateRequestsByPC(PCEmail, callback) {
-        let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ?";
+        let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ? order by accepted asc ";
         db.con.query(sql, [[PCEmail]], (err, res) => {
             if (err) throw err;
             if (res.length) {
@@ -80,7 +93,7 @@ class PrivateRequest {
     }
 
     static getPrivateRequestsByBC(BCEmail, callback) {
-        let sql = "SELECT * FROM PrivateRequest where BusinessCustomers_email = ?";
+        let sql = "SELECT * FROM PrivateRequest where BusinessCustomers_email = ? order by accepted asc ";
         db.con.query(sql, [[BCEmail]], (err, res) => {
             if (err) throw err;
             if (res.length) {
@@ -96,6 +109,4 @@ class PrivateRequest {
 }
 
 module.exports = PrivateRequest;
-PrivateRequest.getPrivateRequestsByPC("cami.231298@gmail.com",(res)=>{
-   console.log(JSON.stringify(res));
-});
+PrivateRequest.getPrivateRequestsByPC("cami.231298@gmail.com",(res)=>console.log(res));

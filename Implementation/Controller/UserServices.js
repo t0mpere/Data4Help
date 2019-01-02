@@ -1,6 +1,7 @@
 const PrivateCustomer = require('../model/PrivateCustomer');
 const UserData = require('../model/UserData');
 const BusinessCustomer = require("../model/BusinessCustomer");
+const PrivateRequest = require("../model/PrivateRequest");
 /*
 *   PrivateCustomer Module:
 *
@@ -68,7 +69,12 @@ function addUserDataToDb(data,callback){
     }
 }
 
-
+function getPrivateRequests(PCEmail,callback) {
+    PrivateRequest.getPrivateRequestsByPC(PCEmail,callback);
+}
+function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
+    PrivateRequest.setAcceptedStatus(BCEmail,PCEmail,val,callback)
+}
 /*
  *   BusinessCustomer Module:
  *   Will interface only with the web app (business customer side) that will provide the methods for managing the account
@@ -80,6 +86,7 @@ function registerBusinessCustomer(args,callback){
     new BusinessCustomer(args).commitToDb(callback);
 
 }
+
 
 
  /*
@@ -115,8 +122,11 @@ function setBusinessCustomerDenied(email,callback){
      registerBusinessCustomer:registerBusinessCustomer,
      getPendingBusinessCustomers:getPendingBusinessCustomers,
      setBusinessCustomerActive:setBusinessCustomerActive,
-     setBusinessCustomerDenyed:setBusinessCustomerDenied,
+     setBusinessCustomerDenied:setBusinessCustomerDenied,
      authPrivateCustomer:authPrivateCustomer,
-     getPersonalData:getPersonalData
+     getPersonalData:getPersonalData,
+     getPrivateRequests:getPrivateRequests,
+     setPrivateRequestStatus:setPrivateRequestStatus
+
 
  };

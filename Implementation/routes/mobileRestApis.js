@@ -11,7 +11,9 @@ router.get('/pc', (req, res) => {
 
 });
 router.post('/login',(req, res) => {
+    console.log(req.body);
     UserServices.authPrivateCustomer(req.body.email,req.body.password,(authResult) =>{
+
         res.writeHead(200, {"Content-Type": "application/json"});
         let JSONResp = {
             auth:authResult
@@ -27,6 +29,9 @@ router.post('/userdata',(req, res) => {
             res.writeHead(200, {"Content-Type": "application/json"});
             UserServices.getPersonalData(req.body.email,(response) => {
                 let JSONResp = response;
+                if(!response){
+                    JSONResp = {result:response}
+                }
                 res.end(JSON.stringify(JSONResp));
             })
 
@@ -44,7 +49,10 @@ router.post('/access_requests',(req, res) => {
         if(authResult) {
             res.writeHead(200, {"Content-Type": "application/json"});
             UserServices.getPrivateRequests(req.body.email,(response) => {
-                let JSONResp = {};
+                let JSONResp = response;
+                if(!response){
+                    JSONResp = {result:response}
+                }
                 res.end(JSON.stringify(JSONResp));
             })
 
@@ -64,6 +72,9 @@ router.post('/access_requests/set_status',(req, res) => {
             UserServices.setPrivateRequestStatus(req.body.email,req.body.BCEmail,req.body.val,(result) =>{
                 UserServices.getPrivateRequests(req.body.email,(response) => {
                     let JSONResp = response;
+                    if(!response){
+                        JSONResp = {result:response}
+                    }
                     res.end(JSON.stringify(JSONResp));
                 });
             })
@@ -73,6 +84,19 @@ router.post('/access_requests/set_status',(req, res) => {
             res.send();
         }
     });
+
+
+});
+router.post('/register_pc',(req, res) => {
+    res.writeHead(200, {"Content-Type": "application/json"});
+    console.log(req.body);
+    req.body.dateOfBirth = new Date(req.body.dateOfBirth);
+    UserServices.registerPrivateCustomer(req.body,(response) =>{
+            let JSONResp = {result:response};
+            res.end(JSON.stringify(JSONResp));
+    })
+
+
 
 
 });

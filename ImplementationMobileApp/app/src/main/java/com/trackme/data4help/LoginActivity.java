@@ -49,6 +49,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         Button logInButton = (Button) findViewById(R.id.buttonLogIn);
+        Button registerButton = findViewById(R.id.buttonSigIn);
+        registerButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),RegistrationActivity.class));
+            }
+        });
         logInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,8 +74,8 @@ public class LoginActivity extends AppCompatActivity {
             toast.setText("Insert email and password");
             toast.show();
         }else {
-            //AuthToken.createToken(email,password);
-            AuthToken.createToken("cami.231298@gmail.com","passuord");
+            AuthToken.createToken(email,password);
+            //AuthToken.createToken("cami.231298@gmail.com","passuord");
             Data4HelpAsyncClient.post("/api/login", null, new Data4HelpJsonResponseHandler(this) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

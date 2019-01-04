@@ -87,12 +87,35 @@ router.post('/access_requests/set_status',(req, res) => {
 
 
 });
+
+router.post('/put_userdata',(req, res) => {
+    console.log(req.body);
+    UserServices.authPrivateCustomer(req.body.email,req.body.password,(authResult) =>{
+        if(authResult) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+
+            let JSONResp;
+            UserServices.putUserData(req.body,(result)=>{
+                JSONResp = {result:result};
+                res.end(JSON.stringify(JSONResp));
+            })
+
+        }else {
+            res.writeHead(404, {"Content-Type": "application/json"});
+            res.send();
+        }
+    });
+
+
+});7
+
+
 router.post('/register_pc',(req, res) => {
     res.writeHead(200, {"Content-Type": "application/json"});
     console.log(req.body);
     req.body.dateOfBirth = new Date(req.body.dateOfBirth);
-    UserServices.registerPrivateCustomer(req.body,(response) =>{
-            let JSONResp = {result:response};
+    UserServices.registerPrivateCustomer(req.body,(result) =>{
+            let JSONResp = {result:result};
             res.end(JSON.stringify(JSONResp));
     })
 

@@ -28,6 +28,7 @@ import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,11 +72,60 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
                 case R.id.navigation_send_user_data:
                     setTitle(R.string.title_send_data);
                     content.removeAllViews();
+                    drawRandomDataCreator();
                     return true;
             }
             return false;
         }
     };
+
+    private void drawRandomDataCreator() {
+        Button createData = new Button(this);
+        content.addView(createData);
+        createData.setText("Generate Data");
+        createData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final RequestParams requestParams = new RequestParams();
+                int hearthRate = (int)(Math.random() * 200 + 20);
+                int minBloodPressure = (int)(Math.random() * 100 + 20);
+                int maxBloodPressure = (int)(Math.random() * 140 + 80);
+                if(minBloodPressure >= maxBloodPressure) maxBloodPressure = minBloodPressure + 30;
+                double lat = (Math.random() * 9 + 8);
+                double longit = (Math.random() * 43 + 42);
+                Calendar cal = Calendar.getInstance();
+
+                requestParams.add("hearthRate",String.valueOf(hearthRate));
+                requestParams.add("minBloodPressure",String.valueOf(minBloodPressure));
+                requestParams.add("maxBloodPressure",String.valueOf(maxBloodPressure));
+                requestParams.add("lat",String.valueOf(lat));
+                requestParams.add("long",String.valueOf(longit));
+                requestParams.add("timeOfAcquisition",cal.getTime().toString());
+                Log.v("params: ",requestParams.toString());
+
+
+                Data4HelpAsyncClient.post("/api/put_userdata",requestParams,new Data4HelpJsonResponseHandler(getApplicationContext()){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            Toast toast = Toast.makeText(getContext(),"",Toast.LENGTH_LONG);
+                            if(response.getBoolean("result")){
+                                toast.setText("success");
+                            }else {
+                                toast.setText("fail");
+                            }
+                            toast.show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                });
+            }
+        });
+    }
 
 
     private void drawPrivateRequests() {

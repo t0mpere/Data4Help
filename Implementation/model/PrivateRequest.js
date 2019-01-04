@@ -26,7 +26,7 @@ class PrivateRequest {
     }
 
     commitToDb(callback) {
-        PrivateCustomer.isPrivateCustomerInDb(this._privateCustomerEmail,(res) =>{
+        PrivateCustomer.isPrivateCustomerInDb(this._privateCustomerEmail,null,(res) =>{
             console.log(res);
            if(res){
                let sql = "INSERT INTO PrivateRequest(accepted,BusinessCustomers_email,PrivateCustomers_email) VALUES (?)";
@@ -109,4 +109,3 @@ class PrivateRequest {
 }
 
 module.exports = PrivateRequest;
-PrivateRequest.getPrivateRequestsByPC("cami.231298@gmail.com",(res)=>console.log(res));

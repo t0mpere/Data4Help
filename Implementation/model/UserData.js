@@ -46,12 +46,43 @@ class UserData {
 
     commitToDb(callback){
         let values = [
-            Object.values(this)
+            [
+                this._email,
+                this._hearthRate,
+                this._minBloodPressure,
+                this._maxBloodPressure,
+                parseFloat(this._lat),
+                parseFloat(this._long),
+                new Date(this._timeOfAcquisition)
+            ]
         ];
-        db.con.query("insert into UserData values (?)",values,(err)=>{
-            if (err) callback(err);
+        new Promise((resolve,reject)=>{
+            db.con.query("select * from UserData where PrivateCustomers_email = ? and timeOfAcquisition = ?",[[this._email],[new Date(this._timeOfAcquisition)]],(error,result)=>{
+                if(error){
+                    resolve(false);
+                    throw error;
+                }
+                if(result.length === 0){
+                    resolve(true)
+                }
+            });
+        }).then((value) => {
+            db.con.query("insert into UserData(PrivateCustomers_email, hearthRate, minBloodPressure, maxBloodPressure, lat, `long`, timeOfAcquisition) values (?)", values, (err) => {
+                console.log("value "+ value);
+                if(value){
+                    if (err) {
+                        callback(false);
+                        throw err;
+                    } else callback(true)
+                }
 
+
+            })
         });
+
+
+
+
     }
 
 

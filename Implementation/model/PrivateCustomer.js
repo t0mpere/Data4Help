@@ -20,21 +20,21 @@ class PrivateCustomer extends Customer{
             //birthplaceProvincia: privateCustomer._placeOfBirthProvincia // Optional
         });
     }
-    static isPrivateCustomerInDb(email,callback){
-        PrivateCustomer.getPrivateCustomerFromDb(email,(res)=>{
+    static isPrivateCustomerInDb(email,cf,callback){
+        PrivateCustomer.getPrivateCustomerFromDb(email,cf,(res)=>{
             if (res === false) callback(false);
             else callback(true);
         })
     }
 
     isInDb(callback){
-        PrivateCustomer.isPrivateCustomerInDb(this.email,callback);
+        PrivateCustomer.isPrivateCustomerInDb(this.email,this.cf,callback);
     }
 
-    static getPrivateCustomerFromDb(email,callback){
-        if(email !== undefined) {
-            let sql = "SELECT * FROM PrivateCustomers WHERE email = ?";
-            db.con.query(sql, email, function (err, res) {
+    static getPrivateCustomerFromDb(email,cf,callback){
+        if(email !== undefined && cf !== undefined) {
+            let sql = "SELECT * FROM PrivateCustomers WHERE email = ? or codiceFiscale = ?";
+            db.con.query(sql, [[email],[cf]], function (err, res) {
                 if (err) {
                     callback(false);
                     throw err;
@@ -67,28 +67,27 @@ class PrivateCustomer extends Customer{
             cf
         }
     */
+    isPCValid(){
+        if(this._sex !== 'M' && this._sex !== 'F') {
+            throw 'Wrong value for sex, use provided enum: ' + this._sex;
+        }
+        if(!(this._dateOfBirth instanceof Date)) throw 'PrivateCustomer: incorrect type on date';
+        if(PrivateCustomer.getCf(this) !== this._codiceFiscale) throw 'invalid cf';
+        return true;
+    }
     constructor(args){
         super(args.email,args.password);
         this._args = args;
         this._name = args.name;
         this._surname = args.surname;
-        if(args.sex === 'M' || args.sex === 'F'){
-            this._sex = args.sex;
-        }else {
-            console.log(args.sex);
-            throw 'Wrong value for sex, use provided enum: ' + args.sex;
-        }
+
         this._email = args.email;
         this._password = args.password;
         this._sex = args.sex;
-        if(!(args.dateOfBirth instanceof Date)) throw 'PrivateCustomer: incorrect type on date';
         this._dateOfBirth = args.dateOfBirth;
         this._placeOfBirth = args.placeOfBirth;
+        this._codiceFiscale = args.codiceFiscale.toUpperCase();
 
-        if(PrivateCustomer.getCf(this) === args.codiceFiscale)
-
-        this._codiceFiscale = args.codiceFiscale;
-        else throw 'invalid cf';
 
     }
     /*
@@ -97,34 +96,47 @@ class PrivateCustomer extends Customer{
     * false if the PC is already present in the db
      */
     commitToDb(callback){
-        if(Customer.isEmailPresent(this.email)) {
-            callback(false);
-            return false
-        }else {
-            let sql = "INSERT INTO PrivateCustomers(email,password,name,surname,sex,placeOfBirth,dateOfBirth,codiceFiscale) VALUES (?)";
-            let values = [
-                [
-                    this._email,
-                    this._password,
-                    this._name,
-                    this._surname,
-                    this._sex,
-                    this._placeOfBirth,
-                    this._dateOfBirth,
-                    this._codiceFiscale
-                ]
-            ];
-            db.con.query(sql, values,(err) => {
-                if (err) {
-                    callback(false);
-                    throw err
-                }else {
-                    callback(true)
-                }
-            });
-            return this;
-        }
+        Customer.isEmailPresent(this.email,(res)=>{
+            if(res){
+                callback(false);
+                return false
+            }else {
+                this.isInDb(function (res) {
+                    if (res) {
+                        callback(false);
+                    } else {
+                        console.log("res ", res);
+                        let sql = "INSERT INTO PrivateCustomers(email,password,name,surname,sex,placeOfBirth,dateOfBirth,codiceFiscale) VALUES (?)";
+                        let values = [
+                            [
+                                this._email,
+                                this._password,
+                                this._name,
+                                this._surname,
+                                this._sex,
+                                this._placeOfBirth,
+                                this._dateOfBirth,
+                                this._codiceFiscale
+                            ]
+                        ];
+
+                        db.con.query(sql, values, (err) => {
+                            if (err) {
+                                callback(false);
+                                throw err;
+                            } else {
+                                callback(true)
+                            }
+                        });
+                        return this;
+                    }
+                });
+
+            }
+        })
     }
+
+
 
     get email() {
         return this._email;

@@ -2,6 +2,7 @@ const PrivateCustomer = require('../model/PrivateCustomer');
 const UserData = require('../model/UserData');
 const BusinessCustomer = require("../model/BusinessCustomer");
 const PrivateRequest = require("../model/PrivateRequest");
+const CodiceFiscale = require("codice-fiscale-js");
 /*
 *   PrivateCustomer Module:
 *
@@ -35,16 +36,24 @@ registerPrivateCustomer({
 callback returns weather if the committing was successful or not
 */
 function registerPrivateCustomer(args,callback) {
-    new PrivateCustomer(args).commitToDb(callback);
+    let pc = new PrivateCustomer(args);
+    if(pc.isPCValid()){
+        pc.commitToDb(callback);
+    }else callback(false);
 
 }
 function authPrivateCustomer(email,password,callback) {
-    PrivateCustomer.getPrivateCustomerFromDb(email,(res)=>{
+    PrivateCustomer.getPrivateCustomerFromDb(email,null,(res)=>{
+
         if(res !== false){
             if(res._password === password) callback(true);
             else callback(false);
         }else callback(false);
     })
+}
+function putUserData(args,callback) {
+    new UserData(args.email,args.hearthRate,args.minBloodPressure,args.maxBloodPressure,args.lat,args.long,new Date(),args.timeOfAcquisition).commitToDb(callback)
+
 }
 /*
  * checks if exist any private/business customer with given email
@@ -126,7 +135,8 @@ function setBusinessCustomerDenied(email,callback){
      authPrivateCustomer:authPrivateCustomer,
      getPersonalData:getPersonalData,
      getPrivateRequests:getPrivateRequests,
-     setPrivateRequestStatus:setPrivateRequestStatus
+     setPrivateRequestStatus:setPrivateRequestStatus,
+     putUserData:putUserData
 
 
  };

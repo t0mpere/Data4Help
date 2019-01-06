@@ -21,4 +21,15 @@
     <string name="title_requests">Requests</string>
     <string name="title_send_data">Send User Data</string>
     <string name="data4help_title">Home</string>
+    <string name="registration_info">Please provide all the required informations</string>
+    <string name="registration_title">Registration</string>
+    <string name="registration_name">Name</string>
+    <string name="registration_surname">Surname</string>
+    <string name="registration_email">Email</string>
+    <string name="registration_password">Password</string>
+    <string name="registration_submit_button">Submit</string>
+    <string name="registration_comune_of_birth">Comune of Birth</string>
+    <string name="registration_codice_fiscale">Codice Fiscale</string>
+    <string name="registration_date_of_birth">Date of birth</string>
+    <string name="registration_yyyy_mm_dd">YYYY/MM/DD</string>
 </resources>

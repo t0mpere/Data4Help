@@ -190,11 +190,12 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
 
                         for (String s: JSONUserDataFields) {
                             TextView textView = new TextView(getContext());
-                            textView.setText(s + ": " + row.getString(s));
+                            textView.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
+                            textView.setText("- " + s.split("_")[1] + ":\t" + row.getString(s));
                             content.addView(textView);
                         }
                         TextView textView = new TextView(getContext());
-                        textView.setText("------------------------------");
+                        textView.setText("\n------------------------------\n");
                         content.addView(textView);
                     }
                 } catch (JSONException e) {

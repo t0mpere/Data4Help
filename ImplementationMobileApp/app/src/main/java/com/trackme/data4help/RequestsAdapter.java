@@ -66,9 +66,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.reques
     public void onBindViewHolder(@NonNull requestViewHolder requestViewHolder, int i) {
         Log.v("binding...",privateRequests.get(i).getBCEmail());
         TextView textView = requestViewHolder.businessCustomerEmail;
-        textView.setText(privateRequests.get(i).getBCEmail());
+        textView.setText("From: "+privateRequests.get(i).getBCEmail());
         TextView timestamp = requestViewHolder.timestamp;
-        timestamp.setText(privateRequests.get(i).getDate().toString());
+        timestamp.setText("Time: " + privateRequests.get(i).getDate().toString());
         requestViewHolder.acceptButton.setEnabled(!privateRequests.get(i).getAccepted());
     }
 

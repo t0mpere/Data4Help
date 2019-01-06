@@ -68,6 +68,7 @@ class PrivateCustomer extends Customer{
         }
     */
     isPCValid(){
+        if(this._email === undefined)throw 'no email';
         if(this._sex !== 'M' && this._sex !== 'F') {
             throw 'Wrong value for sex, use provided enum: ' + this._sex;
         }
@@ -96,6 +97,7 @@ class PrivateCustomer extends Customer{
     * false if the PC is already present in the db
      */
     commitToDb(callback){
+        let tmp = this;
         Customer.isEmailPresent(this.email,(res)=>{
             if(res){
                 callback(false);
@@ -105,18 +107,18 @@ class PrivateCustomer extends Customer{
                     if (res) {
                         callback(false);
                     } else {
-                        console.log("res ", res);
+
                         let sql = "INSERT INTO PrivateCustomers(email,password,name,surname,sex,placeOfBirth,dateOfBirth,codiceFiscale) VALUES (?)";
                         let values = [
                             [
-                                this._email,
-                                this._password,
-                                this._name,
-                                this._surname,
-                                this._sex,
-                                this._placeOfBirth,
-                                this._dateOfBirth,
-                                this._codiceFiscale
+                                tmp._email,
+                                tmp._password,
+                                tmp._name,
+                                tmp._surname,
+                                tmp._sex,
+                                tmp._placeOfBirth,
+                                tmp._dateOfBirth,
+                                tmp._codiceFiscale
                             ]
                         ];
 

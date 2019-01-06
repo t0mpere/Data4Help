@@ -70,10 +70,10 @@ class PrivateCustomer extends Customer{
     isPCValid(){
         if(this._email === undefined)throw 'no email';
         if(this._sex !== 'M' && this._sex !== 'F') {
-            throw 'Wrong value for sex, use provided enum: ' + this._sex;
+            return false;
         }
-        if(!(this._dateOfBirth instanceof Date)) throw 'PrivateCustomer: incorrect type on date';
-        if(PrivateCustomer.getCf(this) !== this._codiceFiscale) throw 'invalid cf';
+        if(!(this._dateOfBirth instanceof Date)) {return false}
+        if(PrivateCustomer.getCf(this) !== this._codiceFiscale) {return false}
         return true;
     }
     constructor(args){

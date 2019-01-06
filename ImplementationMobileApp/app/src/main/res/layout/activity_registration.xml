@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:ems="10"
-                    android:id="@+id/editTextDateOfBirth" android:hint="Date Of Birth"
+                    android:id="@+id/editTextDateOfBirth" android:hint="YYYY/MM/DD"
                     android:layout_marginTop="2dp"/>
             <TextView
                     android:text="Codice Fiscale"

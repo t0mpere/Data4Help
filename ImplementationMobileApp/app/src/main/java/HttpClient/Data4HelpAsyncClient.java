@@ -8,7 +8,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
 
 public class Data4HelpAsyncClient {
-    private static final String BASE_URL = "http://192.168.1.11:3000";
+    private static final String BASE_URL = "http://data4help.herokuapp.com";
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void post(String url, RequestParams requestParams, ResponseHandlerInterface responseHandlerInterface){

@@ -141,7 +141,7 @@ class AnonymousRequest{
     }
 
     compute(){
-        let sql = 'SELECT avg (maxBloodPressure), avg(minBloodPressure),avg (hearthRate),count(*)\n' +
+        let sql = 'SELECT avg (minBloodPressure), avg(maxBloodPressure),avg (hearthRate),count(*)\n' +
             'FROM UserData\n' +
             'WHERE\n' +
             '    (lat >= ?) AND (lat <= ?) AND (`long` >= ?) AND (`long` <= ?) and\n' +

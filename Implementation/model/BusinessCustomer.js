@@ -1,5 +1,6 @@
 const db = require('../database/DbConnection');
 const Customer = require('./Customer');
+const mailServer = require('../Controller/MailServer').mailServer;
 
 class BusinessCustomer extends Customer{
     get email() {
@@ -59,10 +60,30 @@ class BusinessCustomer extends Customer{
                         this._active
                     ]
                 ];
-                db.con.query(sql, values);
-                callback(this);
+                db.con.query(sql, values,(err,res1)=>{
+                    if(err){
+
+                        callback(false);
+                        throw err;
+                    }
+
+                    else {
+
+                        callback(true);
+                        mailServer.sendMail({
+                            from:'data4help@mail.com',
+                            to: this.email,
+                            subject: 'You\'re successfully subscribed to Data4Help' ,
+                            text: 'Congratulation your now subscribed \npassword: '+this.password+'\nTrackMe\n\n data4help.herokuapp.com'
+                        },function (error,info) {
+                            console.log("email sent: " + info)
+                        });
+                    }
+                });
+
             }
             else {
+                console.log("prova: "+res);
                 callback(false);
             }
         });

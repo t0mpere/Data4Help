@@ -170,7 +170,7 @@ class AnonymousRequest{
                         subject: 'Your query '+this.title+ ' has been processed.',
                         text: Object.values(res[0])[3] >= 1000 ? 'Result has been anonymized successfuly': 'Unfortunately Data4Help could not anonymize data acquired by your query'
                     },function (error,info) {
-                        console.log(info.result)
+                        console.log("email sent: " + info)
                     })
                 }
             })

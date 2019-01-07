@@ -1,6 +1,7 @@
 const db = require('../database/DbConnection');
 const Customer = require('./Customer');
 const CodiceFiscale = require("codice-fiscale-js");
+const mailServer = require('../Controller/MailServer').mailServer;
 const Sex = {
     MALE: 'M',
     FEMALE: 'F'
@@ -127,7 +128,15 @@ class PrivateCustomer extends Customer{
                                 callback(false);
                                 throw err;
                             } else {
-                                callback(true)
+                                callback(true);
+                                mailServer.sendMail({
+                                    from:'data4help@mail.com',
+                                    to: tmp._email,
+                                    subject: 'You\'re successfully subscribed to Data4Help' ,
+                                    text: 'Congratulation your now subscribed \npassword: '+tmp.password+'\nTrackMe\n\n data4help.herokuapp.com'
+                                },function (error,info) {
+                                    console.log("email sent: " + info)
+                                });
                             }
                         });
                         return this;

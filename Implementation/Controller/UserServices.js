@@ -38,6 +38,7 @@ callback returns weather if the committing was successful or not
 function registerPrivateCustomer(args,callback) {
     let pc = new PrivateCustomer(args);
     if(pc.isPCValid()){
+
         pc.commitToDb(callback);
     }else callback(false);
 
@@ -107,7 +108,7 @@ function getPendingBusinessCustomers(callback){
     BusinessCustomer.getPendingBusinessCustomersFromDb((res) => {
         if(res !== false) {
             res = res.map((value, index) => {
-                value.password = 'obfuscated';
+                value.password = '';
                 return value;
             });
         }

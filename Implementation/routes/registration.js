@@ -18,7 +18,7 @@ router.post('/', (req,res) =>{
             if(result !== false){
                 res.render('login',{auth: req.isAuthenticated(),newReg: true})
             }else {
-                res.render('login',{auth: req.isAuthenticated(),newReg: false})
+                res.render('registration',{auth: req.isAuthenticated(), regError: true})
             }
         })
     }

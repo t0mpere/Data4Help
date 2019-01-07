@@ -5,6 +5,8 @@ block content
         unless auth
             .row
                 .col-md-4
+                    if regError
+                        p.font-italic.font-weight-light(style='color:#000000;padding: 20px') Something went wrong! Check your inputs
                 .col-md-4
                     form(action='/bc/register', method='post')
                         label(for='email') Email address

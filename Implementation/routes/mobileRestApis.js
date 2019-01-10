@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 const UserServices = require("../Controller/UserServices");
+const RequestServices = require("../Controller/RequestServices");
 
 router.get('/pc', (req, res) => {
     res.writeHead(200, {"Content-Type": "application/json"});
@@ -69,8 +70,8 @@ router.post('/access_requests/set_status',(req, res) => {
         if(authResult) {
             res.writeHead(200, {"Content-Type": "application/json"});
             console.log(req.body);
-            UserServices.setPrivateRequestStatus(req.body.email,req.body.BCEmail,req.body.val,(result) =>{
-                UserServices.getPrivateRequests(req.body.email,(response) => {
+            RequestServices.setPrivateRequestStatus(req.body.email,req.body.BCEmail,req.body.val,(result) =>{
+                RequestServices.getPrivateRequestsByPc(req.body.email,(response) => {
                     let JSONResp = response;
                     if(!response){
                         JSONResp = {result:response}

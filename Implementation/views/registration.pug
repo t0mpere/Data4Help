@@ -19,17 +19,25 @@ block content
                         script.
 
                             function check(input) {
-                                let tmp ;
-                                if (!input)
-                                    tmp = document.getElementById('partitaIva');
+                                let piva ;
+                                let psw;
+                                if (!input) {
+                                    piva = document.getElementById('partitaIva');
+                                    psw = document.getElementById('password');
+                                }
                                 else
-                                    tmp = input;
+                                    piva = input;
 
-                                if (tmp.value.length !== 11) {
-                                    tmp.setCustomValidity('too short');
+                                if (piva.value.length === 11) {
+                                    piva.setCustomValidity('');
+                                } else {
+                                    piva.setCustomValidity('too short');
+                                }
+                                if (psw.value.length === 0) {
+                                    psw.setCustomValidity('too short');
                                 } else {
                                     // input is fine -- reset the error message
-                                    tmp.setCustomValidity('');
+                                    psw.setCustomValidity('');
                                 }
                             }
                         label(for='name') Name

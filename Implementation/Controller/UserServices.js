@@ -79,12 +79,7 @@ function addUserDataToDb(data,callback){
     }
 }
 
-function getPrivateRequests(PCEmail,callback) {
-    PrivateRequest.getPrivateRequestsByPC(PCEmail,callback);
-}
-function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
-    PrivateRequest.setAcceptedStatus(BCEmail,PCEmail,val,callback)
-}
+
 /*
  *   BusinessCustomer Module:
  *   Will interface only with the web app (business customer side) that will provide the methods for managing the account
@@ -93,6 +88,8 @@ function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
  */
 function registerBusinessCustomer(args,callback){
     args.active = 0;
+    if(args.password == undefined) callback(false);
+
     new BusinessCustomer(args).commitToDb(callback);
 
 }
@@ -135,8 +132,6 @@ function setBusinessCustomerDenied(email,callback){
      setBusinessCustomerDenied:setBusinessCustomerDenied,
      authPrivateCustomer:authPrivateCustomer,
      getPersonalData:getPersonalData,
-     getPrivateRequests:getPrivateRequests,
-     setPrivateRequestStatus:setPrivateRequestStatus,
      putUserData:putUserData
 
 

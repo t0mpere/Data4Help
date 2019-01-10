@@ -8,11 +8,11 @@ const AnonRequest = require('../model/AnonymousRequest');
 *   Will interface only with the mobile application, providing methods to accept or reject the request from a
 *   Business Customer, showing all the information available on the latter.
  */
-function acceptPrivateRequest(PCEmail,BCEmail,callback) {
-
+function getPrivateRequestsByPc(PCEmail,callback) {
+    PrivateRequest.getPrivateRequestsByPC(PCEmail,callback);
 }
-function denyPrivateRequest(PCEmail,BCEmail,callback) {
-
+function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
+    PrivateRequest.setAcceptedStatus(BCEmail,PCEmail,val,callback)
 }
 
 
@@ -87,5 +87,7 @@ module.exports = {
     makePrivateRequest:makePrivateRequest,
     makeAnonRequest:makeAnonRequest,
     getQueryData:getQueryData,
-    getQueries:getQueries
+    getQueries:getQueries,
+    getPrivateRequestsByPc:getPrivateRequestsByPc,
+    setPrivateRequestStatus:setPrivateRequestStatus
 };

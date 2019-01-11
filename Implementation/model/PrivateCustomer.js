@@ -74,8 +74,8 @@ class PrivateCustomer extends Customer{
             return false;
         }
         if(!(this._dateOfBirth instanceof Date)) {return false}
-        if(PrivateCustomer.getCf(this) !== this._codiceFiscale) {return false}
-        return true;
+        return PrivateCustomer.getCf(this) === this._codiceFiscale;
+
     }
     constructor(args){
         super(args.email,args.password);

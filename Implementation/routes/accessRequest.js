@@ -31,6 +31,7 @@ router.post('/makeRequest',(req,res) =>{
 });
 
 router.post('/', function(req, res) {
+    console.log(req);
     console.log(req.user._email,req.body.email);
     RequestServices.getPrivateData(req.user._email,req.body.email,(result) =>{
         res.send({res:result});

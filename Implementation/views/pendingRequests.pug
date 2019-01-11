@@ -16,17 +16,18 @@ block content
 
             }
         .row
-            .col-md-4
+            .col-md-4.top-padding
                 .figure-caption.text-left
                     h3.font-italic Business Customer to accept
                     h4.font-weight-light.font-italic Mind that if you deny a business customer it's permanent
-            .col-md-4
+            .col-md-7.background-mod.top-padding
                 if pendingBusinessCustomers === false
-                    .font-weight-light There are no requests pending.
+                    h3.font-weight-light.text-center.pt-5 There are no requests pending.
                 each val in pendingBusinessCustomers
-                    .container.jumbotron
+                    .container.jumbotron.background-mod
                         .figure-caption.text-left
                             h2.font-italic.text-capitalize #{val.name}
+                        hr
                         .badge.badge-light Name:
                         .font-weight-light.text-capitalize #{val.name}
                         .badge.badge-light Address:
@@ -39,8 +40,9 @@ block content
                         .font-weight-light.text-capitalize #{val.partitaIva}
                         .badge.badge-light Nation:
                         .font-weight-light.text-capitalize #{val.nazione}
-                        .btn-group.top-padding
-                            button.btn.btn-success(href, name= val.email, onclick = 'accept(this)') Accept Business Customer
-                            button.btn.btn-danger(href, name= val.email, onclick = 'deny(this)') Deny Business Customer
-            .col-md-2
+                        hr
+                        .btn-group
+                            button.btn.btn-lg.button-mod(href, name= val.email, onclick = 'accept(this)') Accept Business Customer
+                            button.btn.btn-lg.button-mod(href, name= val.email, onclick = 'deny(this)') Deny Business Customer
+            .col-md-1
 

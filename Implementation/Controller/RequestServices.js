@@ -28,7 +28,9 @@ function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
  */
 function getQueryData(BCEmail,title,callback) {
     AnonRequest.getAnonymousRequestByBC(BCEmail,title,(res) =>{
-        res.getQueryData(callback);
+        if(res) {
+            res.getQueryData(callback);
+        } else callback(false);
     });
 }
 function getQueries(BCEmail,callback) {

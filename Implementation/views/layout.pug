@@ -47,7 +47,9 @@ html
                     | Logout
           else if isSystemManager
               li
-                  a(href='/sm/pendingRequests') Pending Requests
+                  a.text-left(href='/sm/pendingRequests')
+                    i.fas.fa-clipboard-check.pr-3
+                    | Pending Requests
               li
                   a.text-left(href='/bc/logout')
                       i.fas.fa-sign-out-alt.pr-3

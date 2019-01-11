@@ -1,117 +1,128 @@
--- -----------------------------------------------------
--- Schema Data4Help
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `Data4Help` DEFAULT CHARACTER SET utf8 ;
-USE `Data4Help` ;
+create table BusinessCustomers
+(
+	email varchar(100) not null
+		primary key,
+	password varchar(45) not null,
+	timestamp timestamp default CURRENT_TIMESTAMP not null,
+	name varchar(45) null,
+	partitaIva varchar(11) null,
+	address varchar(45) null,
+	comune varchar(45) null,
+	nazione varchar(45) null,
+	sessionID varchar(255) null,
+	active tinyint(1) default '0' null,
+	constraint partitaIva_UNIQUE
+		unique (partitaIva)
+)
+;
 
--- -----------------------------------------------------
--- Table `Data4Help`.`BusinessCustomers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`BusinessCustomers` (
-  `email` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `name` VARCHAR(45) NULL DEFAULT NULL,
-  `partitaIva` VARCHAR(11) NULL DEFAULT NULL,
-  `address` VARCHAR(45) NULL DEFAULT NULL,
-  `comune` VARCHAR(45) NULL DEFAULT NULL,
-  `nazione` VARCHAR(45) NULL DEFAULT NULL,
-  `sessionID` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`email`),
-  UNIQUE INDEX `partitaIva_UNIQUE` (`partitaIva` ASC) VISIBLE)
+create table PrivateCustomers
+(
+	email varchar(100) not null
+		primary key,
+	password varchar(45) not null,
+	subToAutomatedSOS binary(1) default '0' null,
+	timestamp timestamp default CURRENT_TIMESTAMP not null,
+	name varchar(45) null,
+	surname varchar(45) null,
+	sex varchar(45) null,
+	placeOfBirth varchar(45) null,
+	placeOfBirthProvincia varchar(2) null,
+	dateOfBirth date null,
+	codiceFiscale varchar(16) null,
+	sessionID varchar(255) null,
+	constraint codiceFiscale_UNIQUE
+		unique (codiceFiscale)
+)
+;
 
+create table PrivateRequest
+(
+	timestamp timestamp default CURRENT_TIMESTAMP not null,
+	accepted tinyint(1) default '0' not null,
+	BusinessCustomers_email varchar(100) not null,
+	PrivateCustomers_email varchar(100) not null,
+	primary key (BusinessCustomers_email, PrivateCustomers_email),
+	constraint fk_PrivateRequest_BusinessCustomers1
+		foreign key (BusinessCustomers_email) references BusinessCustomers (email),
+	constraint fk_PrivateRequest_PrivateCustomers1
+		foreign key (PrivateCustomers_email) references PrivateCustomers (email)
+)
+;
 
--- -----------------------------------------------------
--- Table `Data4Help`.`PrivateCustomers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`PrivateCustomers` (
-  `email` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `subToAutomatedSOS` BINARY(1) NULL DEFAULT NULL,
-  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `name` VARCHAR(45) NULL DEFAULT NULL,
-  `surname` VARCHAR(45) NULL DEFAULT NULL,
-  `sex` VARCHAR(45) NULL DEFAULT NULL,
-  `placeOfBirth` VARCHAR(45) NULL DEFAULT NULL,
-  `placeOfBirthProvincia` VARCHAR(2) NULL DEFAULT NULL,
-  `dateOfBirth` DATE NULL DEFAULT NULL,
-  `codiceFiscale` VARCHAR(16) NULL DEFAULT NULL,
-  `sessionID` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`email`),
-  UNIQUE INDEX `codiceFiscale_UNIQUE` (`codiceFiscale` ASC) VISIBLE)
+create index fk_PrivateRequest_BusinessCustomers1_idx
+	on PrivateRequest (BusinessCustomers_email)
+;
 
+create index fk_PrivateRequest_PrivateCustomers1_idx
+	on PrivateRequest (PrivateCustomers_email)
+;
 
--- -----------------------------------------------------
--- Table `Data4Help`.`PrivateRequest`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`PrivateRequest` (
-  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `accepted` BINARY(1) NOT NULL DEFAULT '0',
-  `BusinessCustomers_email` VARCHAR(100) NOT NULL,
-  `PrivateCustomers_email` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`BusinessCustomers_email`, `PrivateCustomers_email`),
-  INDEX `fk_PrivateRequest_BusinessCustomers1_idx` (`BusinessCustomers_email` ASC) VISIBLE,
-  INDEX `fk_PrivateRequest_PrivateCustomers1_idx` (`PrivateCustomers_email` ASC) VISIBLE,
-  CONSTRAINT `fk_PrivateRequest_BusinessCustomers1`
-    FOREIGN KEY (`BusinessCustomers_email`)
-    REFERENCES `Data4Help`.`BusinessCustomers` (`email`)
-  CONSTRAINT `fk_PrivateRequest_PrivateCustomers1`
-    FOREIGN KEY (`PrivateCustomers_email`)
-    REFERENCES `Data4Help`.`PrivateCustomers` (`email`)
+create table Queries
+(
+	timeOfSubmission timestamp default CURRENT_TIMESTAMP null,
+	BusinessCustomer_email varchar(100) not null,
+	title varchar(100) null,
+	periodical tinyint(1) default '0' null,
+	closed tinyint default '0' null,
+	date_from datetime null,
+	date_to datetime null,
+	lat_sw float(10,7) null,
+	long_sw float(10,7) null,
+	age_from int null,
+	age_to int null,
+	id int auto_increment,
+	next_update timestamp null,
+	lat_ne float(10,7) null,
+	long_ne float(10,7) null,
+	primary key (id, BusinessCustomer_email),
+	constraint businessCustomer_email_fk
+		foreign key (BusinessCustomer_email) references BusinessCustomers (email)
+)
+;
 
+create index businessCustomer_email_fk
+	on Queries (BusinessCustomer_email)
+;
 
--- -----------------------------------------------------
--- Table `Data4Help`.`Queries`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`Queries` (
-  `timeOfSubmission` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `BusinessCustomer_email` VARCHAR(100) NOT NULL,
-  `serializedParameters` MEDIUMBLOB NULL DEFAULT NULL,
-  `serializedResult` LONGBLOB NULL DEFAULT NULL,
-  `closed` BINARY(1) NULL DEFAULT '0',
-  `periodical` BINARY(1) NULL DEFAULT NULL,
-  `next_update` TIMESTAMP NULL DEFAULT NULL,
-  `Title` VARCHAR(45) NOT NULL,
-  `QueryID` INT(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`timeOfSubmission`, `BusinessCustomer_email`),
-  UNIQUE INDEX `QueryID_UNIQUE` (`QueryID` ASC) VISIBLE,
-  INDEX `BusinessCustomer_email_idx` (`BusinessCustomer_email` ASC) VISIBLE,
-  CONSTRAINT `BusinessCustomer_email`
-    FOREIGN KEY (`BusinessCustomer_email`)
-    REFERENCES `Data4Help`.`BusinessCustomers` (`email`)
+create table QueriesData
+(
+	id int default '0' not null,
+	bc_email varchar(100) not null,
+	avg_bp_min float null,
+	avg_bp_max float null,
+	avg_bpm float null,
+	num int null,
+	timestamp timestamp default '0000-00-00 00:00:00' not null,
+	primary key (id, bc_email, timestamp),
+	constraint queries_fk
+		foreign key (id, bc_email) references Queries (id, BusinessCustomer_email)
+)
+;
 
+create table UserData
+(
+	PrivateCustomers_email varchar(100) not null,
+	hearthRate int(3) not null,
+	minBloodPressure int(3) not null,
+	maxBloodPressure int(3) not null,
+	lat double(9,7) null,
+	`long` double(9,7) null,
+	timestamp timestamp default CURRENT_TIMESTAMP not null,
+	timeOfAcquisition timestamp default '0000-00-00 00:00:00' not null,
+	id int auto_increment,
+	age int null,
+	primary key (PrivateCustomers_email, timeOfAcquisition),
+	constraint UserData_id_uindex
+		unique (id),
+	constraint fk_UserData_PrivateCustomers
+		foreign key (PrivateCustomers_email) references PrivateCustomers (email)
+)
+;
 
--- -----------------------------------------------------
--- Table `Data4Help`.`UserData`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`UserData` (
-  `PrivateCustomers_email` VARCHAR(100) NOT NULL,
-  `hearthRate` INT(3) NOT NULL,
-  `minBloodPressure` INT(3) NOT NULL,
-  `maxBloodPressure` INT(3) NOT NULL,
-  `lat` FLOAT NULL DEFAULT NULL,
-  `long` FLOAT NULL DEFAULT NULL,
-  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `timeOfAcquisition` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`PrivateCustomers_email`, `timestamp`),
-  CONSTRAINT `fk_UserData_PrivateCustomers`
-    FOREIGN KEY (`PrivateCustomers_email`)
-    REFERENCES `Data4Help`.`PrivateCustomers` (`email`)
+create view Customers as
+SELECT `Data4Help`.`PrivateCustomers`.`email` AS `email`
+  FROM `Data4Help`.`PrivateCustomers`
+  UNION ALL SELECT `Data4Help`.`BusinessCustomers`.`email` AS `email`
+            FROM `Data4Help`.`BusinessCustomers`;
 
-
--- -----------------------------------------------------
--- Table `Data4Help`.`QueryData`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Data4Help`.`QueryData` (
-  `QueryID` INT(11) NOT NULL,
-  `PrivateCustomers_email` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`QueryID`, `PrivateCustomers_email`),
-  INDEX `fk_UserData_idx` (`PrivateCustomers_email` ASC) VISIBLE,
-  CONSTRAINT `fk_Queries`
-    FOREIGN KEY (`QueryID`)
-    REFERENCES `Data4Help`.`Queries` (`QueryID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_UserData`
-    FOREIGN KEY (`PrivateCustomers_email`)
-    REFERENCES `Data4Help`.`UserData` (`PrivateCustomers_email`)

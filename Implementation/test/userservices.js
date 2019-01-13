@@ -1,20 +1,16 @@
 process.env.NODE_ENV = 'test';
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let app = require('../webApp');
+
 let assert = require('assert');
-const BusinessCustomer = require('../model/BusinessCustomer');
 let PrivateCustomer = require('../model/PrivateCustomer');
 let UserServices = require("../Controller/UserServices");
 let db = require("../database/DbConnection");
-let expect = chai.expect;
 
 
 describe("Test of UserServices functions in Controller", function () {
 
     //just to avoid timeout exceeded exception
     this.timeout(15000);
-
+/*
     after(function (done) {
         db.con.end(function(err) {
             if(err) {
@@ -22,10 +18,11 @@ describe("Test of UserServices functions in Controller", function () {
             }
             done();
         });
-    });
+    });*/
 
     let pcs = ['abatemaurizio_81@mail.it', 'abbateludovico_99@mail.it', 'cami.231298@gmail.com',
         'tanifabrizia_59@mail.it', 'terzijesse_89@mail.it'];
+
 
     describe('Test of getPersonalData', function () {
 
@@ -44,6 +41,7 @@ describe("Test of UserServices functions in Controller", function () {
             });
         });
     });
+
 
     describe('Test of registerPrivateCustomer', function () {
 
@@ -100,6 +98,7 @@ describe("Test of UserServices functions in Controller", function () {
         });
     });
 
+
     describe('Test of authPrivateCustomer', function () {
 
         it("it should authenticate private customer", function (done){
@@ -135,6 +134,7 @@ describe("Test of UserServices functions in Controller", function () {
             });
         });
     });
+
 
     describe('Test of registerBusinessCustomer/getPendingBusinessCustomers', function () {
 

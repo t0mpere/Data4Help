@@ -1,42 +1,17 @@
 process.env.NODE_ENV = 'test';
-let express = require('express');
+
 let chai = require('chai');
 let expect = chai.expect;
 let chaiHttp = require('chai-http');
 let server = require('../bin/www');
-let app = require('../webApp');
-let should = chai.should();
 let assert = require('assert');
-const request = require("supertest")(express);
-let utils = require("../routes/utils");
 let db = require("../database/DbConnection");
-let passport = require('passport');
+let url = require('url');
 
 chai.use(chaiHttp);
 
-// Allows the middleware to think we're already authenticated.
-app.request.isAuthenticated = function() {
-    console.log(1);
-    return true;
-};
 
-
-utils.isBusinessCustomer = function () {
-    console.log(2);
-    return true;
-};
-/*
-const loginWithDefaultUser = async () => {
-    return request.post("/login")
-        .send({ "username": "giackosparrow@hotmail.it", "password": "psw" })
-        .expect(200);
-};
-*/
-
-
-//CREARE NUOVO BUSINESS CUSTOMER PERCHE ALTRIMENTI NON PUO LEGGERE LA PARTITA IVA
-/*
-describe('/POST private requests', function () {
+describe('Test login function', function () {
 
     this.timeout(20000);
 
@@ -50,21 +25,24 @@ describe('/POST private requests', function () {
             .post('/login')
             .send({email:"giackosparrow@hotmail.it", password:"psw"})
             .end((err, res) => {
-                expect(res).to.redirectTo('http://127.0.0.1:3000/');
+                expect(res).to.redirect;
+                let path = (url.parse(String(res.redirects)).pathname);
+                assert.equal(path, '/');
                 done();
             })
     });
-/*
+
     it('login with wrong credentials', function (done) {
         chai.request(server)
             .post('/login')
             .send({email:"giackosparrow@hotmail.it", password:"wrong_password"})
             .end((err, res) => {
-                expect(res).to.redirectTo('http://127.0.0.1:3000/login');
-                console.log(res);
+                expect(res).to.redirect;
+                let path = (url.parse(String(res.redirects)).pathname);
+                assert.equal(path, '/login');
                 done();
             })
-    });*/
+    });
 /*
     it('access to private request', function (done) {
 
@@ -135,6 +113,6 @@ describe('/POST private requests', function () {
                 done();
             });
 
-    });
+    });*/
 
-});*/
+});

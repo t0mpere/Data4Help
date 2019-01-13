@@ -1,10 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-let chai = require('chai');
-let should = chai.should();
 let assert = require('assert');
-const request = require("supertest");
-let expect = chai.expect;
 let RequestServices = require("../Controller/RequestServices");
 let db = require("../database/DbConnection");
 
@@ -29,6 +25,7 @@ describe('Test of RequestServices functions in Controller', function () {
         });
     });*/
 
+
     describe('Test of getQueries', function () {
 
         it('it should return queries of a business customer', function (done) {
@@ -47,6 +44,7 @@ describe('Test of RequestServices functions in Controller', function () {
             }
         });
     });
+
 
     describe('Test of getQueryData', function () {
 
@@ -72,6 +70,7 @@ describe('Test of RequestServices functions in Controller', function () {
         });
     });
 
+
     describe('Test of getPrivateRequests', function () {
 
         it('it should return private requests', function (done) {
@@ -88,6 +87,7 @@ describe('Test of RequestServices functions in Controller', function () {
             });
         });
     });
+
 
     describe('Test of getPrivateData', function () {
 
@@ -112,6 +112,7 @@ describe('Test of RequestServices functions in Controller', function () {
         });
     });
 
+
     describe('Test of makeAnonRequest', function () {
 
         it('it should return false because this anonymous request already exist', function(done) {
@@ -124,8 +125,8 @@ describe('Test of RequestServices functions in Controller', function () {
            })
         });
 
-        describe('Test makeAnonRequest with invalid parameters', function () {
 
+        describe('Test makeAnonRequest with invalid parameters', function () {
 
             let bc = 'giackosparrow@hotmail.it';
 
@@ -190,9 +191,9 @@ describe('Test of RequestServices functions in Controller', function () {
                     done();
                 })
             });
-
         });
     });
+
 
     describe('Test of getPrivateRequestsByPc', function () {
 

@@ -147,6 +147,8 @@ block content
                             tbody#result.table-primary(style="background-color:transparent; font-size:14px;")
                     .col-md-3(style = 'padding: 20px; background-color:#ededed;')
                         h3.text-center(style ="color:#77bbbb; padding-bottom:5%;") Anonymous Request:
+                        a.btn.btn-primary.btn-block.btn-lg.top-padding.button-mod(href = '/bc/anonRequest/makeRequest')
+                            | Make New Request
                         .list-group
                             unless queries === undefined
                                 each val in queries
@@ -160,8 +162,6 @@ block content
                                             span.badge.badge-danger.badge-pill Closed
                             else
                                 h4(style ="color:#77bbbb;") No anonymous requests yet.
-                        a.btn.btn-primary.btn-block.btn-lg.top-padding.button-mod(href = '/bc/anonRequest/makeRequest')
-                            | Make New Request
 
         else
             h1 Login to use this function

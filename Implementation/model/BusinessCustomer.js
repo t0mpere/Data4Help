@@ -43,7 +43,7 @@ class BusinessCustomer extends Customer{
         this._password = args.password;
         this._active = args.active;
     }
-    //TODO test
+
     commitToDb(callback){
         Customer.isEmailPresent(this.email,(res) =>{
             if(res === false) {
@@ -97,7 +97,11 @@ class BusinessCustomer extends Customer{
         BusinessCustomer.getBusinessCustomerFromDb(this.email,callback);
     }
 
-    //TODO test
+    /*
+    *
+    *   This function returns a specific Business Customer, givent its email
+    *
+     */
     static getBusinessCustomerFromDb(email,callback){
         let sql = "SELECT * FROM BusinessCustomers WHERE email = ?";
         db.con.query(sql,email,function (err,res) {
@@ -117,6 +121,13 @@ class BusinessCustomer extends Customer{
             callback(bc);
         })
     }
+
+    /*
+    *
+    *   This function returns all pending Business Customers (active = 0)
+    *   It's called and use by the System Manager Module
+    *
+     */
     static getPendingBusinessCustomersFromDb(callback){
         let sql = 'SELECT * FROM BusinessCustomers WHERE active = 0';
         db.con.query(sql,function (err,res) {
@@ -137,6 +148,13 @@ class BusinessCustomer extends Customer{
         })
 
     }
+
+    /*
+    *
+    *   This function is change the attribute 'active' of a Business Customer
+    *   It's used from the System Manager Module to accept/refuse the registration of a Business Customer
+    *
+     */
     static setActiveStatus(email,value,callback){
         let sql = "UPDATE BusinessCustomers  SET active = ?  WHERE email = ? ;";
         db.con.query(sql,[value,email],function (err) {

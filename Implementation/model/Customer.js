@@ -1,6 +1,12 @@
 const db = require('../database/DbConnection');
 class Customer {
 
+    /*
+    *
+    *   This function checks if it exists a Customer (either Business o Private) with this email
+    *   It's used to avoid duplicates in the registration process
+    *
+     */
     static isEmailPresent(email,callback){
         let sql = "SELECT * FROM Customers WHERE email = '" + email +"'";
         db.con.query(sql,function (err,res) {

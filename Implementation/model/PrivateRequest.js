@@ -49,6 +49,11 @@ class PrivateRequest {
 
     }
 
+    /*
+    *
+    *   This function returns a specific Private Request, given a Private Customer email and a Business Customer email
+    *
+     */
     static getPrivateRequest(PCEmail, BCEmail, callback) {
         let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ? and BusinessCustomers_email = ?";
         db.con.query(sql, [[PCEmail], [BCEmail]], (err, res) => {
@@ -62,6 +67,12 @@ class PrivateRequest {
             } else callback(false);
         })
     }
+
+    /*
+    *
+    *   This function sets the status of a Private Request, depending on whether the request was accepted or not
+    *
+     */
     static setAcceptedStatus(BCEmail,PCEmail,val,callback){
         let sql = "UPDATE PrivateRequest  SET accepted = ?  WHERE BusinessCustomers_email = ? and PrivateCustomers_email = ?;"
         db.con.query(sql,[[val],[BCEmail],[PCEmail]],(err,res)=>{
@@ -76,6 +87,11 @@ class PrivateRequest {
 
     }
 
+    /*
+    *
+    *   This function returns all the Private Requests belonging to a specific Private Customer, given its email
+    *
+     */
     static getPrivateRequestsByPC(PCEmail, callback) {
         let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ? order by accepted asc ";
         db.con.query(sql, [[PCEmail]], (err, res) => {
@@ -91,6 +107,11 @@ class PrivateRequest {
         })
     }
 
+    /*
+    *
+    *   This function returns all the Private Requests belonging to a specific Business Customer, given its email
+    *
+     */
     static getPrivateRequestsByBC(BCEmail, callback) {
         let sql = "SELECT * FROM PrivateRequest where BusinessCustomers_email = ? order by accepted asc ";
         db.con.query(sql, [[BCEmail]], (err, res) => {

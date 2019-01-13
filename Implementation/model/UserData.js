@@ -13,9 +13,11 @@ class UserData {
         this._timeOfAcquisition = timeOfAcquisition;
     }
 
-
-
-
+    /*
+    *
+    *   This function return all the User Data belonging to a specific Private Customer, given its email
+    *
+     */
     static getUserDataFromEmail(email,callback){
         let sql = "SELECT * FROM UserData where PrivateCustomers_email = ?";
         db.con.query(sql,email,(err,res) =>{

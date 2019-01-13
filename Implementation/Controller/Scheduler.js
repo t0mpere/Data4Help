@@ -1,7 +1,11 @@
 const AnonRequest = require('../model/AnonymousRequest');
 const db = require('../database/DbConnection');
 
-
+/*
+*
+*   This function calculates the update, for the subscriptions, and notifies to the Business Customer
+*
+ */
 function schedule() {
     db.con.query('Select * from Queries where datediff(current_date ,next_update) >= 0 and closed = 0', (err,res)=>{
         if(err) {

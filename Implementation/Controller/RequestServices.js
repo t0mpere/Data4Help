@@ -1,6 +1,7 @@
 const PrivateRequest = require('../model/PrivateRequest');
 const UserData = require('../model/UserData');
 const AnonRequest = require('../model/AnonymousRequest');
+
 /*
 *
 *   Incoming Request handler functions:
@@ -8,9 +9,21 @@ const AnonRequest = require('../model/AnonymousRequest');
 *   Will interface only with the mobile application, providing methods to accept or reject the request from a
 *   Business Customer, showing all the information available on the latter.
  */
+
+/*
+*
+*   This function returns all the Private Requests belonging to a specific Private Customer, given its email
+*
+ */
 function getPrivateRequestsByPc(PCEmail,callback) {
     PrivateRequest.getPrivateRequestsByPC(PCEmail,callback);
 }
+
+/*
+*
+*   This function sets the status of a Private Request, depending on whether the request was accepted or not
+*
+ */
 function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
     PrivateRequest.setAcceptedStatus(BCEmail,PCEmail,val,callback)
 }
@@ -26,6 +39,12 @@ function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
 *   requests (updates or results) and to make others, both individual and anonymized requests.
 *
  */
+
+/*
+*
+*   This functions return all data belonging to an Anonymous Request
+*
+ */
 function getQueryData(BCEmail,title,callback) {
     AnonRequest.getAnonymousRequestByBC(BCEmail,title,(res) =>{
         if(res) {
@@ -33,6 +52,12 @@ function getQueryData(BCEmail,title,callback) {
         } else callback(false);
     });
 }
+
+/*
+*
+*   This function returns all Anonymous Requests belonging to a specific Business Customer, given its email
+*
+ */
 function getQueries(BCEmail,callback) {
     AnonRequest.getAnonymousRequestsByBC(BCEmail,(res)=>{
         if(!res) callback(false);
@@ -40,6 +65,11 @@ function getQueries(BCEmail,callback) {
     })
 }
 
+/*
+*
+*   This function makes a new Private Request, only if it doesn't already exist
+*
+ */
 function makePrivateRequest(BCEmail,PCEmail,callback) {
     PrivateRequest.getPrivateRequest(PCEmail,BCEmail,(res) =>{
         if (res === false) {
@@ -55,10 +85,21 @@ function makePrivateRequest(BCEmail,PCEmail,callback) {
     })
 }
 
+/*
+*
+*   This function returns all the Private Requests belonging to a specific Private Customer, given its email
+*
+ */
 function getPrivateRequests(BCEmail,callback) {
     PrivateRequest.getPrivateRequestsByBC(BCEmail,callback);
 }
 
+/*
+*
+*  This function returns User Data of a specific Private Customer, only if the Private Request
+*  has been accepted (res.accepted === 1)
+*
+ */
 function getPrivateData(BCEmail,PCEmail,callback) {
     PrivateRequest.getPrivateRequest(PCEmail,BCEmail,(res)=>{
         if(res === false) callback(res);
@@ -73,6 +114,12 @@ function getPrivateData(BCEmail,PCEmail,callback) {
     })
 }
 
+/*
+*
+*   This function make a new Anonymous Requests, checking that all the parameters belonging to the Anonymous Request
+*   are consistent
+*
+ */
 function makeAnonRequest(BCEmail, params, callback) {
 
     //check parameters

@@ -21,6 +21,11 @@ class AnonymousRequest{
         this.next_update = (args.next_update !== undefined) ? args.next_update : new Date();
     }
 
+    /*
+    *
+    *   This function is used to calculate the next update in the case of a subscription, called by the scheduler
+    *
+     */
     calculateNextUpdate(){
         let today = new Date();
         switch (this.periodical){
@@ -82,7 +87,11 @@ class AnonymousRequest{
         })
     }
 
-
+    /*
+    *
+    *   This function returns the list of anonymous requests belonging to a Business Customer, given its email
+    *
+     */
     static getAnonymousRequestsByBC(BCEmail,callback){
         let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ?";
         db.con.query(sql,[[BCEmail]],(err,res) =>{
@@ -101,6 +110,11 @@ class AnonymousRequest{
         })
     }
 
+    /*
+    *
+    *   This function checks if a specific anonymous request is present in the database
+    *
+     */
     static isInDb(BCEmail, params, callback){
         AnonymousRequest.getAnonymousRequestsByBC(BCEmail, (res) => {
             if(!res) {
@@ -120,6 +134,12 @@ class AnonymousRequest{
     isInDb(BCEmail, callback){
         AnonymousRequest.isInDb(BCEmail, this, callback);
     }
+
+    /*
+    *
+    *   This function returns all data belonging to a specific anonymous request
+    *
+     */
     getQueryData(callback){
         let sql = "SELECT * FROM QueriesData WHERE bc_email = ? and id = ?";
         db.con.query(sql,[[this.BusinessCustomer_email],[this.id]],(err,res) =>{
@@ -138,6 +158,13 @@ class AnonymousRequest{
         })
     }
 
+    /*
+    *
+    *   This function calculate the data for an anonymous request
+    *   Depending on whether the number of people that meet the parameters (num) is >= 1000,
+    *   it notifies, through the mail server, the processing of the request to the business customer
+    *
+     */
     compute(){
         let sql = 'SELECT avg (minBloodPressure), avg(maxBloodPressure),avg (hearthRate),count(*)\n' +
             'FROM UserData\n' +
@@ -176,6 +203,11 @@ class AnonymousRequest{
 
     }
 
+    /*
+    *
+    *   This function returns a specific aonymous request, given its title and the business customer
+    *
+     */
     static getAnonymousRequestByBC(BCEmail,title, callback) {
         let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ? AND title = ?";
         db.con.query(sql,[[BCEmail],[title]],(err,res) =>{

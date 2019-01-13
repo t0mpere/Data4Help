@@ -21,6 +21,12 @@ class PrivateCustomer extends Customer{
             //birthplaceProvincia: privateCustomer._placeOfBirthProvincia // Optional
         });
     }
+
+    /*
+    *
+    *   This function checks if a Private Customer is present in the database, given its email and it codice fiscale
+    *
+     */
     static isPrivateCustomerInDb(email,cf,callback){
         PrivateCustomer.getPrivateCustomerFromDb(email,cf,(res)=>{
             if (res === false) callback(false);
@@ -32,6 +38,11 @@ class PrivateCustomer extends Customer{
         PrivateCustomer.isPrivateCustomerInDb(this.email,this.cf,callback);
     }
 
+    /*
+    *
+    *   This function returns a specific Private Customer, given its email and its codice fiscale
+    *
+     */
     static getPrivateCustomerFromDb(email,cf,callback){
         if(email !== undefined && cf !== undefined) {
             let sql = "SELECT * FROM PrivateCustomers WHERE email = ? or codiceFiscale = ?";
@@ -68,6 +79,11 @@ class PrivateCustomer extends Customer{
             cf
         }
     */
+    /*
+    *
+    *   This function checks the consistency of the attribute of the Private Customer
+    *
+     */
     isPCValid(){
         if(this._email === undefined)throw 'no email';
         if(this._sex !== 'M' && this._sex !== 'F') {

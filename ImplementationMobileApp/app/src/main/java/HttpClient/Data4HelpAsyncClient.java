@@ -15,7 +15,7 @@ public class Data4HelpAsyncClient {
         if(AuthToken.getToken() == null){
             client.post(BASE_URL + url, requestParams,responseHandlerInterface);
         }else{
-            //merging params
+            //merging params to handle authentication
             AuthToken authToken = AuthToken.getToken();
             if(requestParams == null){
                 requestParams = new RequestParams();

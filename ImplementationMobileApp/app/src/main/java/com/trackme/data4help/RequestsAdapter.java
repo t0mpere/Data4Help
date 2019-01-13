@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.trackme.data4help.Model.IRecyclerViewCallback;
 import com.trackme.data4help.Model.PrivateRequest;
 import java.util.ArrayList;
+
+/**
+ * Class holding data and view components of a private request.
+ */
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.requestViewHolder> {
 
     private IRecyclerViewCallback listner;

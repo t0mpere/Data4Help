@@ -8,6 +8,9 @@ public class PrivateRequest{
     private String PCEmail;
     private Boolean accepted;
 
+    /**
+     *Class used to represent the data structure of the PrivateRequest.
+     */
     public PrivateRequest(Date date, String BCEmail, String PCEmail, int accepted) {
         this.date = date;
         this.BCEmail = BCEmail;

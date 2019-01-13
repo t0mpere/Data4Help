@@ -9,11 +9,16 @@ public class AuthToken extends JSONObject {
     private String email;
     private String password;
 
+    /**
+     * Private customers access token
+     * @param email auth email
+     * @param password auth password
+     */
     private AuthToken (String email, String password) {
         this.email = email;
         this.password = password;
     }
-    public static AuthToken getToken(){
+    static AuthToken getToken(){
         return token;
     }
     public static void deleteToken(){
@@ -23,11 +28,11 @@ public class AuthToken extends JSONObject {
         token = new AuthToken(email,password);
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
     }
 }

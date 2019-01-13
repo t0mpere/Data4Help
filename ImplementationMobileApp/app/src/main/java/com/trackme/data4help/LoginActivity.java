@@ -65,17 +65,21 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Function that handles the login procedure
+     */
     private void attemptLogin() {
         String email = emailTextField.getText().toString();
         String password = passwordTextField.getText().toString();
         final Toast toast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
+        //parameters check
         if(email.isEmpty() || password.isEmpty()){
             toast.setText("Insert email and password");
             toast.show();
         }else {
             AuthToken.createToken(email,password);
-            //AuthToken.createToken("cami.231298@gmail.com","passuord");
+            //making the request to the server
             Data4HelpAsyncClient.post("/api/login", null, new Data4HelpJsonResponseHandler(this) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -83,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.v("Success", response.toString());
                     try {
                         if(response.getBoolean("auth")){
+
                             toast.setText("Success");
                             toast.show();
                             startActivity(new Intent(getContext(),MainActivity.class));

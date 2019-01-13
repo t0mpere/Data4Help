@@ -4,17 +4,14 @@ import HttpClient.Data4HelpAsyncClient;
 import HttpClient.Data4HelpJsonResponseHandler;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import com.loopj.android.http.RequestParams;
 import com.trackme.data4help.Model.IRecyclerViewCallback;
@@ -24,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,12 +30,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IRecyclerViewCallback {
 
-    private TextView mTextMessage;
     private LinearLayout content;
     private RecyclerView recyclerView;
     private ArrayList<PrivateRequest> privateRequests;
     View recyclerViewLayout;
-    private View scrollView;
+
+    //Used to parse json data coming from the server
     private static final List<String> JSONUserDataFields = Collections.unmodifiableList(new ArrayList<String>() {
         {
             add("_hearthRate");
@@ -51,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
 
         }
     });
+
+    //Handles the bottom buttons click event
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -72,17 +70,21 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
                 case R.id.navigation_send_user_data:
                     setTitle(R.string.title_send_data);
                     content.removeAllViews();
-                    drawRandomDataCreator();
+                    randomDataCreator();
                     return true;
             }
             return false;
         }
     };
 
-    private void drawRandomDataCreator() {
+    /**
+     * Sends a new User Data entry generated randomly to the server
+     */
+    private void randomDataCreator() {
         Button createData = new Button(this);
         content.addView(createData);
         createData.setText("Generate Data");
+        //onClick
         createData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
                 Log.v("params: ",requestParams.toString());
 
 
+                //request to the server sending user data
                 Data4HelpAsyncClient.post("/api/put_userdata",requestParams,new Data4HelpJsonResponseHandler(getApplicationContext()){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -128,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
     }
 
 
+    /**
+     * Function used to draw on screen all private requests retrieved from the server
+     */
     private void drawPrivateRequests() {
 
         Data4HelpAsyncClient.post("/api/access_requests",null,new Data4HelpJsonResponseHandler(this) {
@@ -139,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
         });
 
     }
+
+    //Parsing the Array of JSONObjects received from the server to an Array of PrivateRequest
     public ArrayList<PrivateRequest> parseData(ArrayList<JSONObject> data){
         ArrayList<PrivateRequest>privateRequests = new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -158,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
         }
         return privateRequests;
     }
+
     private void createRecyclerView(ArrayList<PrivateRequest> data){
         privateRequests = data;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -172,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         content = findViewById(R.id.content);
-        scrollView = findViewById(R.id.scrollView);
+        View scrollView = findViewById(R.id.scrollView);
         recyclerViewLayout = LayoutInflater.from(this).inflate(R.layout.recycler_view,null);
         recyclerView = (RecyclerView) recyclerViewLayout.findViewById(R.id.recyclerView);
         drawUserData();
@@ -180,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    /**
+     * Draws user data retrieved from the server on the main view.
+     */
     private void drawUserData(){
         Data4HelpAsyncClient.post("/api/userdata",null,new Data4HelpJsonResponseHandler(this) {
             @Override
@@ -206,6 +218,10 @@ public class MainActivity extends AppCompatActivity implements IRecyclerViewCall
         });
 
     }
+
+    /**
+     * Updates the view containing all the private requests
+     */
     private void updateRecyclerView(JSONArray response){
         ArrayList<JSONObject> data = new ArrayList<>();
         if(response.length() != 0) {

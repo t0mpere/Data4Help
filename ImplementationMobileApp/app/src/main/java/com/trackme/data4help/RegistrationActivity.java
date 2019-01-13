@@ -38,6 +38,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         AuthToken.deleteToken();
         setContentView(R.layout.activity_registration);
+        //instancing all components
         submitButton = findViewById(R.id.buttonSubmit);
         submitButton.setOnClickListener(this);
         nameEditText = findViewById(R.id.editTextName);
@@ -52,6 +53,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         radioButtonMale = findViewById(R.id.radioButtonMale);
     }
 
+    /**
+     * Check if an email is well formed
+     * @param emailStr email to check
+     * @return boolean containing the result of the check
+     */
     public static boolean validate(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
         return matcher.find();
@@ -99,6 +105,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         Log.v("params: ",requestParams.toString());
 
+        //Sending registration parameters to the server
         Data4HelpAsyncClient.post("/api/register_pc",requestParams,new Data4HelpJsonResponseHandler(this){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

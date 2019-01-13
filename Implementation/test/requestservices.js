@@ -192,6 +192,43 @@ describe('Test of RequestServices functions in Controller', function () {
                 })
             });
         });
+
+        describe('Test makeAnonRequest with right parameters', function () {
+
+            let request = {
+                title: 'test_anonymous_request',
+                periodical: '0',
+                age_from: '5',
+                age_to: '100',
+                date_from: '2016-01-02',
+                date_to: '2019-01-05',
+                lat_ne: '45.5130838',
+                long_ne: '9.275551199999995',
+                lat_sw: '45.420383',
+                long_sw: '9.09084299999995'
+            };
+
+            let bc = 'giackosparrow@hotmail.it';
+
+            it('it should create a new anonymous request', function (done) {
+                RequestServices.makeAnonRequest(bc, request, (res) => {
+                    //assert.equal(res, true);
+                    console.log(res);
+                    done();
+                })
+            });
+
+            after(function (done) {
+                let sql = "DELETE FROM Queries WHERE BusinessCustomer_email = ? AND title = ?";
+                db.con.query(sql, [[bc],[request.title]], (err) => {
+                    if(err)
+                        console.log(err);
+                    done();
+                })
+            });
+
+        });
+
     });
 
 

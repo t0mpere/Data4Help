@@ -67,7 +67,7 @@ passport.use(new LocalStrategy(
         //retrieve BC from db for user check
         BusinessCustomer.getBusinessCustomerFromDb(email,(bc)=> {
             if(bc._password === password && bc._active) done(null,bc);
-            else if (email === 'system@manager' && password === 'passuord') done (null, {systemManager: true});
+            else if (email === 'system@manager' && password === 'password') done (null, {systemManager: true});
             else done(null,false);
         });
     }

@@ -80,7 +80,6 @@ class AnonymousRequest{
                 });
             }
         })
-
     }
 
 
@@ -134,7 +133,6 @@ class AnonymousRequest{
                     }
                     return value;
                 });
-                //console.log(tuple);
                 callback(tuple)
             }else callback(false);
         })
@@ -165,7 +163,7 @@ class AnonymousRequest{
                 else {
                     console.log(this.BusinessCustomer_email);
                     mailServer.sendMail({
-                        from:'data4help@mail.com',
+                        from:'"Data4Help"data4help@mail.com',
                         to: this.BusinessCustomer_email,
                         subject: 'Your query '+this.title+ ' has been processed.',
                         text: Object.values(res[0])[3] >= 1000 ? 'Result has been anonymized successfuly': 'Unfortunately Data4Help could not anonymize data acquired by your query'

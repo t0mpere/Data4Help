@@ -142,6 +142,8 @@ block content
                             tbody#result.table-primary(style="background-color:transparent; font-size:14px;")
                     .col-md-3(style = 'padding: 20px; background-color:#ededed;')
                         h3.text-center(style ="color:#77bbbb; padding-bottom:5%;") Private Requests
+                        a.btn.btn-primary.btn-block.btn-lg.top-padding.button-mod(href = '/bc/accessRequest/makeRequest')
+                            | Make New Request
                         .list-group
                             unless privateRequests === undefined
                                 each val in privateRequests
@@ -155,8 +157,7 @@ block content
                                             span.badge.badge-danger.badge-pill Pending
                             else
                                 h4(style ="color:#77bbbb;") No private requests yet.
-                        a.btn.btn-primary.btn-block.btn-lg.top-padding.button-mod(href = '/bc/accessRequest/makeRequest')
-                            | Make New Request
+
 
         else
             h1 Login to use this function

@@ -31,7 +31,10 @@ block content
                                 if (piva.value.length === 11) {
                                     piva.setCustomValidity('');
                                 } else {
-                                    piva.setCustomValidity('too short');
+                                    if (piva.value.length < 11) {
+                                        piva.setCustomValidity('too short');
+                                    }
+                                    else piva.setCustomValidity('too long');
                                 }
                                 if (psw.value.length === 0) {
                                     psw.setCustomValidity('too short');

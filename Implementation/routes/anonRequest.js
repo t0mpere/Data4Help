@@ -39,9 +39,8 @@ router.post('/',(req,res) => {
 });
 
 router.post('/makeRequest',(req,res) =>{
-    console.log(req.body);
+    /*
     let params = req.body;
-    //do modifications to params
 
     //check parameters
     let check = true;
@@ -90,12 +89,13 @@ router.post('/makeRequest',(req,res) =>{
     if(!check)
         res.send({result : check});
     else{
-        console.log(req.user);
         RequestServices.makeAnonRequest(req.user._email,params,(result) => {
             res.send({result : result})
         });
-    }
-
+    }*/
+    RequestServices.makeAnonRequest(req.user._email,req.body,(result) => {
+        res.send({result : result})
+    });
 });
 
 module.exports = router;

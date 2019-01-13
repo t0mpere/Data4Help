@@ -130,9 +130,9 @@ class PrivateCustomer extends Customer{
                             } else {
                                 callback(true);
                                 mailServer.sendMail({
-                                    from:'data4help@mail.com',
+                                    from:'"Data4Help"data4help@mail.com',
                                     to: tmp._email,
-                                    subject: 'You\'re successfully subscribed to Data4Help' ,
+                                    subject: 'You\'re successfully subscribed to Data4Help as a Private Customer' ,
                                     text: 'Congratulation your now subscribed \npassword: '+tmp.password+'\nTrackMe\n\n data4help.herokuapp.com'
                                 },function (error,info) {
                                     console.log("email sent: " + info)

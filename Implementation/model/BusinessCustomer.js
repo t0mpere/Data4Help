@@ -71,9 +71,9 @@ class BusinessCustomer extends Customer{
 
                         callback(true);
                         mailServer.sendMail({
-                            from:'data4help@mail.com',
+                            from:'"Data4Help"data4help@mail.com',
                             to: this.email,
-                            subject: 'You\'re successfully subscribed to Data4Help' ,
+                            subject: 'You\'re successfully subscribed to Data4Help as a Business Customer' ,
                             text: 'Congratulation your now subscribed \npassword: '+this.password+'\nTrackMe\n\n data4help.herokuapp.com'
                         },function (error,info) {
                             console.log("email sent: " + info)

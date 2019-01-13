@@ -10,18 +10,21 @@ let assert = require('assert');
 const request = require("supertest")(express);
 let utils = require("../routes/utils");
 let db = require("../database/DbConnection");
+let passport = require('passport');
 
 chai.use(chaiHttp);
 
 // Allows the middleware to think we're already authenticated.
 app.request.isAuthenticated = function() {
+    console.log(1);
     return true;
 };
 
-/*
+
 utils.isBusinessCustomer = function () {
+    console.log(2);
     return true;
-};*/
+};
 /*
 const loginWithDefaultUser = async () => {
     return request.post("/login")
@@ -32,7 +35,7 @@ const loginWithDefaultUser = async () => {
 
 
 //CREARE NUOVO BUSINESS CUSTOMER PERCHE ALTRIMENTI NON PUO LEGGERE LA PARTITA IVA
-
+/*
 describe('/POST private requests', function () {
 
     this.timeout(20000);
@@ -48,8 +51,6 @@ describe('/POST private requests', function () {
             .send({email:"giackosparrow@hotmail.it", password:"psw"})
             .end((err, res) => {
                 expect(res).to.redirectTo('http://127.0.0.1:3000/');
-                assert.equal(res.unauthorized, false);
-                console.log(res);
                 done();
             })
     });
@@ -60,10 +61,32 @@ describe('/POST private requests', function () {
             .send({email:"giackosparrow@hotmail.it", password:"wrong_password"})
             .end((err, res) => {
                 expect(res).to.redirectTo('http://127.0.0.1:3000/login');
+                console.log(res);
                 done();
             })
+    });*/
+/*
+    it('access to private request', function (done) {
+
+        before(function (done) {
+            passport.authenticate('local');
+            done();
+        });
+        chai.request(server)
+            .post('/bc/accessRequest')
+            //.send({email:"giackosparrow@hotmail.it", password:"psw"})
+            .end((err, res) => {
+                if(err)
+                    console.log(err);
+                console.log(res);
+                done();
+            })
+
+
     });
 */
+
+
 
 /*
     it('it should return 302', (done) => {
@@ -113,5 +136,5 @@ describe('/POST private requests', function () {
             });
 
     });
-*/
-});
+
+});*/

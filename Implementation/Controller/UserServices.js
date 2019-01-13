@@ -75,6 +75,12 @@ function getPersonalData(email,callback) {
     return UserData.getUserDataFromEmail(email,callback);
 }
 
+function getPrivateRequests(PCEmail,callback) {
+    PrivateRequest.getPrivateRequestsByPC(PCEmail,callback);
+}
+function setPrivateRequestStatus(PCEmail,BCEmail,val,callback) {
+    PrivateRequest.setAcceptedStatus(BCEmail,PCEmail,val,callback)
+}
 
 /*
  *   BusinessCustomer Module:
@@ -133,7 +139,10 @@ function setBusinessCustomerDenied(email,callback){
      setBusinessCustomerDenied:setBusinessCustomerDenied,
      authPrivateCustomer:authPrivateCustomer,
      getPersonalData:getPersonalData,
-     putUserData:putUserData
+     putUserData:putUserData,
+     getPrivateRequests:getPrivateRequests,
+     setPrivateRequestStatus:setPrivateRequestStatus
+
 
 
  };

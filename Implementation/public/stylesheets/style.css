@@ -59,7 +59,7 @@ img {
     color: white;
     min-width: 10vw;
     font-size : 1.5vw;
-    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 .button-mod:hover{

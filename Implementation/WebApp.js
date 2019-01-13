@@ -48,7 +48,6 @@ webApp.use('/chart',express.static(__dirname + '/node_modules/chart.js/'));
 webApp.use(session({
     genid: (req) => {
         console.log('Inside the session middleware');
-        console.log(req.sessionID);
         return uuid() // use UUIDs for session IDs
     },
     secret: 'oxygenius',
@@ -77,12 +76,10 @@ passport.use(new LocalStrategy(
 * User serialization / deserialization middleware
  */
 passport.serializeUser((user, done) => {
-    console.log(user);
     done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
-    console.log('Inside deserializeUser callback');
     console.log(`The user id passport saved in the session file store is: ${user}`);
     //const user = users[0].id === id ? users[0] : false;
     done(null, user);
@@ -94,7 +91,6 @@ passport.deserializeUser((user, done) => {
 webApp.use(function(req, res, next) {
     res.locals.auth = Utils.isBusinessCustomer(req);
     res.locals.isSystemManager = Utils.isSystemManager(req);
-    console.log(res.locals.auth);
     next();
 });
 webApp.use('/', indexRouter);

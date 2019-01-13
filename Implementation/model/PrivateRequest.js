@@ -27,7 +27,6 @@ class PrivateRequest {
 
     commitToDb(callback) {
         PrivateCustomer.isPrivateCustomerInDb(this._privateCustomerEmail,null,(res) =>{
-            console.log(res);
            if(res){
                let sql = "INSERT INTO PrivateRequest(accepted,BusinessCustomers_email,PrivateCustomers_email) VALUES (?)";
                let values = [
@@ -54,7 +53,7 @@ class PrivateRequest {
         let sql = "SELECT * FROM PrivateRequest where PrivateCustomers_email = ? and BusinessCustomers_email = ?";
         db.con.query(sql, [[PCEmail], [BCEmail]], (err, res) => {
             if (err) {
-                callback(false)
+                callback(false);
                 throw err;
             }
             if (res.length) {

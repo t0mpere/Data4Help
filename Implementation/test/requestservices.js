@@ -218,7 +218,6 @@ describe('Test of RequestServices functions in Controller', function () {
         before(function (done) {
             RequestServices.getPrivateRequests(bc, (res) => {
                 res.forEach(function (request) {
-                    console.log(request.PrivateCustomers_email);
                     if(request.PrivateCustomers_email === pc)
                         throw new Error('invalid request existing')
                 });

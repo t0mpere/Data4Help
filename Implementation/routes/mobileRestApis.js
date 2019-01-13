@@ -90,7 +90,6 @@ router.post('/access_requests/set_status',(req, res) => {
 });
 
 router.post('/put_userdata',(req, res) => {
-    console.log(req.body);
     UserServices.authPrivateCustomer(req.body.email,req.body.password,(authResult) =>{
         if(authResult) {
             res.writeHead(200, {"Content-Type": "application/json"});
@@ -108,7 +107,7 @@ router.post('/put_userdata',(req, res) => {
     });
 
 
-});7
+});
 
 
 router.post('/register_pc',(req, res) => {

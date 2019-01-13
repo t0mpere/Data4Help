@@ -85,7 +85,7 @@ class BusinessCustomer extends Customer{
 
             }
             else {
-                console.log("prova: "+res);
+                console.log("test: "+res);
                 callback(false);
             }
         });

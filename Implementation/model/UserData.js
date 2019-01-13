@@ -68,23 +68,17 @@ class UserData {
             });
         }).then((value) => {
             db.con.query("insert into UserData(PrivateCustomers_email, hearthRate, minBloodPressure, maxBloodPressure, lat, `long`, timeOfAcquisition) values (?)", values, (err) => {
-                console.log("value "+ value);
                 if(value){
                     if (err) {
                         callback(false);
                         throw err;
                     } else callback(true)
                 }
-
-
             })
         });
 
-
-
-
     }
 
-
 }
+
 module.exports = UserData;

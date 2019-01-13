@@ -1,6 +1,5 @@
 let express = require('express');
 let router = express.Router();
-let passport = require('passport');
 const Utils = require('../routes/utils');
 const RequestServices = require('../Controller/RequestServices');
 
@@ -19,7 +18,6 @@ router.get('/makeRequest',(req,res) => {
 
 router.get('/',(req,res) => {
     RequestServices.getQueries(req.user._email,(result)=>{
-        console.log(result);
         if(result.length > 0){
             res.render('anonRequestViewer',{queries:result})
         }
@@ -28,7 +26,6 @@ router.get('/',(req,res) => {
 });
 router.post('/',(req,res) => {
     RequestServices.getQueryData(req.user._email,req.body.title,(result) => {
-        console.log('result: ',result);
         if(result.length > 0){
             res.send({res:result})
         }else {

@@ -177,7 +177,6 @@ class AnonymousRequest{
     }
 
     static getAnonymousRequestByBC(BCEmail,title, callback) {
-        console.log('title:',title);
         let sql = "SELECT * FROM Queries WHERE BusinessCustomer_email = ? AND title = ?";
         db.con.query(sql,[[BCEmail],[title]],(err,res) =>{
             if(err) {

@@ -9,7 +9,9 @@ block content
                     .col-md-4
                         p
                             if newReg
-                                h3 Success, you are registered.
+                                h3(style='color:#4d9999') Success, you are registered.
+                                h4 When we have accepted you, you can access to our services!
+                                hr
                         p
                         form.form-signin(action='/login', method='post')
                             h1.h3.mb-3.font-weight-normal Please sign in

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha './test/requestservices.js' './test/userservices.js' './test/route.js'"
+    "test": "nyc mocha \"./test/requestservices.js\" \"./test/userservices.js\" \"./test/route.js\""
   },
   "dependencies": {
     "acorn": "^6.0.4",

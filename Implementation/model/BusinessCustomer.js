@@ -60,7 +60,7 @@ class BusinessCustomer extends Customer{
                         this._active
                     ]
                 ];
-                db.con.query(sql, values,(err,res1)=>{
+                db.con.query(sql, values,(err)=>{
                     if(err){
 
                         callback(false);
@@ -74,7 +74,9 @@ class BusinessCustomer extends Customer{
                             from:'"Data4Help"data4help@mail.com',
                             to: this.email,
                             subject: 'You\'re successfully subscribed to Data4Help as a Business Customer' ,
-                            text: 'Congratulation your now subscribed \npassword: '+this.password+'\nTrackMe\n\n data4help.herokuapp.com'
+                            text: 'Congratulation! You\'re now subscribed to Data4Help\nYour password is: '+
+                            this.password+'\nAfter your registration is accepted, you can access and use our services\n\n' +
+                            'TrackMe\n\n data4help.herokuapp.com'
                         },function (error,info) {
                             console.log("email sent: " + info)
                         });
@@ -141,6 +143,17 @@ class BusinessCustomer extends Customer{
             if (err) {
                 callback(false);
                 throw err;
+            }
+            if(value === 1){
+                mailServer.sendMail({
+                    from:'"Data4Help"data4help@mail.com',
+                    to: email,
+                    subject: 'You can access to our services!' ,
+                    text: 'Congratulation! Now you can access to our site and our services! \n\n'+
+                    'TrackMe\n\n data4help.herokuapp.com'
+                },function (error,info) {
+                    console.log("email sent: " + info)
+                });
             }
 
             callback(true);

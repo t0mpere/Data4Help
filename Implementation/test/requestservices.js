@@ -177,7 +177,7 @@ describe('Test of RequestServices functions in Controller', function () {
                 let request = {
                     title: 'test',
                     periodical: '0',
-                    age_from: 5,
+                    age_from: '5',
                     age_to: '100',
                     date_from: '2019-01-02',
                     date_to: '2017-01-05',

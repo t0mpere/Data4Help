@@ -18,9 +18,7 @@ router.get('/makeRequest',(req,res) => {
 
 router.get('/',(req,res) => {
     RequestServices.getQueries(req.user._email,(result)=>{
-        if(result.length > 0){
-            res.render('anonRequestViewer',{queries:result})
-        }
+        res.render('anonRequestViewer',{queries:result})
     })
 
 });
